@@ -1,0 +1,14 @@
+{
+  "name": "authors_heaven",
+  "version": "1.0.0",
+  "description": "Create a community of like minded authors to foster inspiration and innovation by leveraging the modern web.",
+  "main": "app.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "author": "Paccy10",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}

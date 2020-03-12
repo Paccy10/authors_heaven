@@ -1,0 +1,19 @@
+# Logs
+logs
+*.log
+.DS_Store
+
+#VScode configuration
+.vscode
+
+# Dependency directory
+node_modules
+
+#package-lock
+package-lock.json
+
+# Coverage directory used by tools like istanbul
+coverage
+
+#nyc
+.nyc_output
