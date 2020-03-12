@@ -2,13 +2,25 @@
   "name": "authors_heaven",
   "version": "1.0.0",
   "description": "Create a community of like minded authors to foster inspiration and innovation by leveraging the modern web.",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
+    "start": "nodemon --require babel-register index.js",
     "test": "npm test"
   },
   "author": "Paccy10",
   "license": "ISC",
   "dependencies": {
+    "babel-preset-es2015": "^6.24.1",
+    "babel-register": "^6.26.0",
     "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-prettier": "^3.1.2",
+    "nodemon": "^2.0.2",
+    "prettier": "^1.19.1"
   }
 }
