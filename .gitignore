@@ -17,3 +17,6 @@ coverage
 
 #nyc
 .nyc_output
+
+#Environment variables
+.env
