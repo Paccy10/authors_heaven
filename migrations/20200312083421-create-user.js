@@ -53,7 +53,7 @@ const userMigration = {
         });
     },
     down: queryInterface => {
-        return queryInterface.dropTable('Users');
+        return queryInterface.dropTable('users');
     }
 };
 

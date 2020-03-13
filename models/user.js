@@ -9,8 +9,8 @@ const userModel = (sequelize, DataTypes) => {
             bio: { type: DataTypes.STRING },
             image: { type: DataTypes.STRING },
             isAdmin: { type: DataTypes.BOOLEAN },
-            isActivated: { type: DataTypes.BOOLEAN },
-            allowNotifications: { type: DataTypes.BOOLEAN }
+            isActivated: { type: DataTypes.BOOLEAN }
+            // allowNotifications: { type: DataTypes.BOOLEAN }
         },
         {}
     );
