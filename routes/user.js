@@ -14,4 +14,6 @@ router.post(
     asyncHandler(user.signup)
 );
 
+router.get('/activate/:token', asyncHandler(user.activateAccount));
+
 export default router;
