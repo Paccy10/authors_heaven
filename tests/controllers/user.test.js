@@ -3,19 +3,33 @@ import chaiHttp from 'chai-http';
 import app from '../../index';
 import {
     newUser,
+    newUser2,
     newInvalidUser,
     invalidUserWithLowercasePassword,
     invalidUserWithUppercasePassword,
-    invalidUserWithoutDigit
+    invalidUserWithoutDigit,
+    loginUser,
+    loginUser2,
+    loginUser3
 } from '../data/user';
+import models from '../../models';
 
 chai.use(chaiHttp);
 chai.should();
 
 const API_BASE_URL = '/api/v1';
+const { user: User } = models;
 
 describe('User', () => {
-    let token;
+    let verifyToken;
+
+    before(async () => {
+        try {
+            await User.create(newUser2);
+        } catch (error) {
+            console.log(error);
+        }
+    });
 
     it('should create a new user and send a confirmation link', done => {
         chai.request(app)
@@ -26,7 +40,7 @@ describe('User', () => {
                     done(error);
                 }
 
-                token = res.body.data.token;
+                verifyToken = res.body.data.token;
 
                 res.should.status(201);
                 res.body.should.have.property('status').eql('success');
@@ -130,7 +144,7 @@ describe('User', () => {
 
     it('should activate user account', done => {
         chai.request(app)
-            .get(`${API_BASE_URL}/auth/activate/${token}`)
+            .get(`${API_BASE_URL}/auth/activate/${verifyToken}`)
             .end((error, res) => {
                 if (error) {
                     done(error);
@@ -147,7 +161,7 @@ describe('User', () => {
 
     it('should not activate user account that is already activated', done => {
         chai.request(app)
-            .get(`${API_BASE_URL}/auth/activate/${token}`)
+            .get(`${API_BASE_URL}/auth/activate/${verifyToken}`)
             .end((error, res) => {
                 if (error) {
                     done(error);
@@ -173,6 +187,84 @@ describe('User', () => {
                 res.body.should.have.property('status').eql('error');
                 res.body.should.have.property('errors');
                 res.body.errors[0].msg.should.equal('Invalid token');
+                done();
+            });
+    });
+
+    it('should login user', done => {
+        chai.request(app)
+            .post(`${API_BASE_URL}/auth/login`)
+            .send(loginUser)
+            .end((error, res) => {
+                if (error) {
+                    done(error);
+                }
+
+                res.should.status(200);
+                res.body.should.have.property('status').eql('success');
+                res.body.should.have
+                    .property('message')
+                    .eql('User successfully logged in');
+                res.body.should.have.property('data');
+                res.body.data.should.have.property('user');
+                res.body.data.should.have.property('token');
+                res.body.data.user.email.should.equal(loginUser.email);
+                done();
+            });
+    });
+
+    it('should not login a user if no credentials provided', done => {
+        chai.request(app)
+            .post(`${API_BASE_URL}/auth/login`)
+            .send({})
+            .end((error, res) => {
+                if (error) {
+                    done(error);
+                }
+
+                res.should.status(400);
+                res.body.should.have.property('status').eql('error');
+                res.body.should.have.property('errors');
+                res.body.errors[0].msg.should.equal('Email is required');
+                res.body.errors[1].msg.should.equal('Password is required');
+                done();
+            });
+    });
+
+    it('should not login a user that is not activated', done => {
+        chai.request(app)
+            .post(`${API_BASE_URL}/auth/login`)
+            .send(loginUser2)
+            .end((error, res) => {
+                if (error) {
+                    done(error);
+                }
+
+                res.should.status(400);
+                res.body.should.have.property('status').eql('error');
+                res.body.should.have.property('errors');
+                res.body.errors[0].msg.should.equal(
+                    'Please activate your account'
+                );
+                done();
+            });
+    });
+
+    it('should not login a user that is not activated', done => {
+        chai.request(app)
+            .post(`${API_BASE_URL}/auth/login`)
+            .send(loginUser3)
+            .end((error, res) => {
+                if (error) {
+                    done(error);
+                }
+
+                res.should.status(400);
+                res.body.should.have.property('status').eql('error');
+                res.body.should.have.property('errors');
+                res.body.errors[0].msg.should.equal(
+                    'Incorrect username or password'
+                );
                 done();
             });
     });

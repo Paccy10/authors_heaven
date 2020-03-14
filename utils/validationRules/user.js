@@ -33,3 +33,14 @@ export const signupValidators = [
             return true;
         })
 ];
+
+export const loginValidators = [
+    check('email', 'Email is required')
+        .trim()
+        .not()
+        .isEmpty(),
+    check('password', 'Password is required')
+        .trim()
+        .not()
+        .isEmpty()
+];
