@@ -6,7 +6,7 @@ const userModel = (sequelize, DataTypes) => {
             lastname: { type: DataTypes.STRING },
             email: { type: DataTypes.STRING },
             password: { type: DataTypes.STRING },
-            bio: { type: DataTypes.STRING },
+            bio: { type: DataTypes.TEXT },
             image: { type: DataTypes.STRING },
             isAdmin: { type: DataTypes.BOOLEAN },
             isActivated: { type: DataTypes.BOOLEAN }
@@ -14,9 +14,9 @@ const userModel = (sequelize, DataTypes) => {
         },
         {}
     );
-    // User.associate = models => {
-    //     // associations can be defined here
-    // };
+    User.associate = models => {
+        User.hasMany(models.article);
+    };
     return User;
 };
 

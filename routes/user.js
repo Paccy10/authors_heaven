@@ -5,7 +5,8 @@ import {
     loginValidators
 } from '../utils/validationRules/user';
 import asyncHandler from '../middlewares/errors/asyncHandler';
-import { checkEmail, validateUser } from '../middlewares/validations/user';
+import { validate } from '../middlewares/validations';
+import { checkEmail } from '../middlewares/validations/user';
 
 const router = express.Router();
 const user = new User();
@@ -13,12 +14,12 @@ const user = new User();
 router.post(
     '/signup',
     signupValidators,
-    validateUser,
+    validate,
     asyncHandler(checkEmail),
     asyncHandler(user.signup)
 );
 
 router.get('/activate/:token', asyncHandler(user.activateAccount));
-router.post('/login', loginValidators, validateUser, asyncHandler(user.login));
+router.post('/login', loginValidators, validate, asyncHandler(user.login));
 
 export default router;

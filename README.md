@@ -20,3 +20,28 @@ git clone https://github.com/Paccy10/authors_heaven.git
 ```
 npm install
 ```
+
+-   Create PostgreSQL Databases
+
+```
+- App database
+- Test databse
+```
+
+-   Apply migrations
+
+```
+npm run migrate
+```
+
+-   Run the application
+
+```
+npm start
+```
+
+-   Running tests and generating reports
+
+```
+npm test
+```
