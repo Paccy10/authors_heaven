@@ -138,4 +138,20 @@ describe('Article', () => {
                 done();
             });
     });
+
+    it('should get all articles', done => {
+        chai.request(app)
+            .get(`${API_BASE_URL}/articles`)
+            .end((err, res) => {
+                if (err) {
+                    done(err);
+                }
+                res.should.status(200);
+                res.body.should.have.property('status').eql('success');
+                res.body.should.have.property('data');
+                res.body.data.should.have.property('articles');
+                res.body.data.should.have.property('metaData');
+                done();
+            });
+    });
 });

@@ -18,4 +18,6 @@ router.post(
     asyncHandler(article.create)
 );
 
+router.get('/', asyncHandler(article.getAll));
+
 export default router;

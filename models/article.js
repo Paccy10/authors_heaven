@@ -7,7 +7,7 @@ const articleModel = (sequelize, DataTypes) => {
             body: { type: DataTypes.TEXT },
             tags: { type: DataTypes.ARRAY(DataTypes.STRING) },
             image: { type: DataTypes.STRING },
-            author: {
+            authorId: {
                 type: DataTypes.INTEGER,
                 references: { model: 'user', key: 'id' }
             }
@@ -16,7 +16,8 @@ const articleModel = (sequelize, DataTypes) => {
     );
     Article.associate = models => {
         Article.belongsTo(models.user, {
-            foreignKey: 'author',
+            foreignKey: 'authorId',
+            as: 'author',
             onDelete: 'CASCADE'
         });
     };

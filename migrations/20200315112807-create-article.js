@@ -28,7 +28,7 @@ const articleMigration = {
                 type: Sequelize.STRING,
                 allowNull: true
             },
-            author: {
+            authorId: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
                 onDelete: 'CASCADE',

@@ -1,8 +1,9 @@
 import models from '../models';
 import uploader from '../utils/imageUpload/cloudinary';
 import generateSlug from '../utils/generateSlug';
+import paginate from '../utils/paginationHandler';
 
-const { article: Article } = models;
+const { article: Article, user: User } = models;
 
 class articleController {
     async create(req, res) {
@@ -24,13 +25,39 @@ class articleController {
             body: req.body.body,
             tags: req.body.tags ? req.body.tags.split(',') : null,
             image: image ? image.url : null,
-            author: req.user.id
+            authorId: req.user.id
         };
         const { dataValues: article } = await Article.create(newArticle);
         res.status(201).json({
             status: 'success',
             message: 'Article successfully created',
             data: { article }
+        });
+    }
+
+    async getAll(req, res) {
+        const parameters = {
+            order: [['id', 'DESC']],
+            include: [
+                {
+                    model: User,
+                    as: 'author',
+                    attributes: [
+                        'id',
+                        'firstname',
+                        'lastname',
+                        'email',
+                        'image',
+                        'bio'
+                    ]
+                }
+            ]
+        };
+        const { metaData, data } = await paginate(req, Article, parameters);
+        return res.status(200).json({
+            status: 'success',
+            message: 'Articles successfully fetched',
+            data: { articles: data, metaData }
         });
     }
 }
