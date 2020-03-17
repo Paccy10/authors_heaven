@@ -60,6 +60,30 @@ class articleController {
             data: { articles: data, metaData }
         });
     }
+
+    async getOne(req, res) {
+        const article = await Article.findOne({
+            where: { slug: req.params.slug },
+            include: [
+                {
+                    model: User,
+                    as: 'author',
+                    attributes: ['firstname', 'lastname', 'email', 'image']
+                }
+            ]
+        });
+        if (!article) {
+            return res.status(404).json({
+                status: 'error',
+                errors: [{ msg: 'Article not found' }]
+            });
+        }
+        return res.status(200).json({
+            status: 'success',
+            message: 'Article successfully fetched',
+            data: { article }
+        });
+    }
 }
 
 export default articleController;

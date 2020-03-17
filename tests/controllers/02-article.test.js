@@ -2,17 +2,18 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../../index';
 import { newArticle } from '../data/article';
-// import models from '../../models';
+import models from '../../models';
 
 chai.use(chaiHttp);
 chai.should();
 
 const API_BASE_URL = '/api/v1';
-// const { article: Article } = models;
+const { article: Article } = models;
 
 describe('Article', () => {
     let APIToken;
     let jwt;
+    let articleSlug;
 
     before(async () => {
         const response = await chai
@@ -36,6 +37,7 @@ describe('Article', () => {
                 if (err) {
                     done(err);
                 }
+                articleSlug = res.body.data.article.slug;
                 res.should.status(201);
                 res.body.should.have.property('status').eql('success');
                 res.body.should.have
@@ -151,6 +153,35 @@ describe('Article', () => {
                 res.body.should.have.property('data');
                 res.body.data.should.have.property('articles');
                 res.body.data.should.have.property('metaData');
+                done();
+            });
+    });
+
+    it('should get one article', done => {
+        chai.request(app)
+            .get(`${API_BASE_URL}/articles/${articleSlug}`)
+            .end((err, res) => {
+                if (err) {
+                    done(err);
+                }
+                res.should.status(200);
+                res.body.should.have.property('status').eql('success');
+                res.body.should.have.property('data');
+                res.body.data.should.have.property('article');
+                done();
+            });
+    });
+    it('should not get article if it does not exist', done => {
+        chai.request(app)
+            .get(`${API_BASE_URL}/articles/fdfd`)
+            .end((err, res) => {
+                if (err) {
+                    done(err);
+                }
+                res.should.status(404);
+                res.body.should.have.property('status').eql('error');
+                res.body.should.have.property('errors');
+                res.body.errors[0].msg.should.equal('Article not found');
                 done();
             });
     });

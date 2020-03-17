@@ -19,5 +19,6 @@ router.post(
 );
 
 router.get('/', asyncHandler(article.getAll));
+router.get('/:slug', asyncHandler(article.getOne));
 
 export default router;
