@@ -23,6 +23,7 @@ const { user: User } = models;
 describe('User', () => {
     const verifyToken = generateToken({ email: 'test.user@app.com' });
     const passwordResetToken = generateToken({ email: 'test.user@app.com' });
+    let token;
     before(async () => {
         try {
             await User.create(newUser2);
@@ -195,6 +196,7 @@ describe('User', () => {
                     done(error);
                 }
 
+                token = `Bearer ${res.body.data.token}`;
                 res.should.status(200);
                 res.body.should.have.property('status').eql('success');
                 res.body.should.have
@@ -330,6 +332,23 @@ describe('User', () => {
                 res.body.should.have.property('status').eql('error');
                 res.body.should.have.property('errors');
                 res.body.errors[0].msg.should.equal('Invalid token');
+                done();
+            });
+    });
+
+    it('should get all users', done => {
+        chai.request(app)
+            .get(`${API_BASE_URL}/auth`)
+            .set('Authorization', token)
+            .end((err, res) => {
+                if (err) {
+                    done(err);
+                }
+                res.should.status(200);
+                res.body.should.have.property('status').eql('success');
+                res.body.should.have.property('data');
+                res.body.data.should.have.property('users');
+                res.body.data.should.have.property('metaData');
                 done();
             });
     });

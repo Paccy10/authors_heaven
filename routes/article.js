@@ -1,6 +1,6 @@
 import express from 'express';
-import auth from '../middlewares/auth';
 import Article from '../controllers/article';
+import auth from '../middlewares/auth';
 import asyncHandler from '../middlewares/errors/asyncHandler';
 import { validate } from '../middlewares/validations';
 import { checkArticle } from '../middlewares/validations/article';

@@ -8,6 +8,7 @@ import {
     resetPasswordEmail
 } from '../utils/emails/emailTemplates';
 import sendEmail from '../utils/emails/sendEmail';
+import paginate from '../utils/paginationHandler';
 
 dotenv.config();
 
@@ -145,6 +146,19 @@ class userController {
         return res.status(200).json({
             status: 'success',
             message: 'Password successfully changed'
+        });
+    }
+
+    async getAll(req, res) {
+        const parameters = {
+            order: [['firstname', 'ASC']],
+            attributes: ['firstname', 'lastname', 'email', 'bio', 'image']
+        };
+        const { metaData, data } = await paginate(req, User, parameters);
+        return res.status(200).json({
+            status: 'success',
+            message: 'Articles successfully fetched',
+            data: { users: data, metaData }
         });
     }
 }

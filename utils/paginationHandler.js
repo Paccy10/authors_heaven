@@ -5,7 +5,8 @@ const paginate = async (req, model, parameters) => {
         offset: (Number(page) - 1) * Number(limit),
         limit,
         order: parameters.order,
-        include: parameters.include
+        include: parameters.include,
+        attributes: parameters.attributes
     });
     const metaData = {
         currentPage: `${rootUrl}?page=${page}&limit=${limit}`,

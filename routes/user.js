@@ -8,6 +8,7 @@ import {
 import asyncHandler from '../middlewares/errors/asyncHandler';
 import { validate } from '../middlewares/validations';
 import { checkEmail } from '../middlewares/validations/user';
+import auth from '../middlewares/auth';
 
 const router = express.Router();
 const user = new User();
@@ -34,5 +35,6 @@ router.patch(
     validate,
     asyncHandler(user.resetPassword)
 );
+router.get('/', auth, asyncHandler(user.getAll));
 
 export default router;
