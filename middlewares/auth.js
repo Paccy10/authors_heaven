@@ -21,12 +21,18 @@ const auth = (req, res, next) => {
     try {
         const token = getToken(req.headers.authorization);
         jwt.verify(token, process.env.SECRET_KEY, (error, user) => {
-            if (error) {
+            if (error)
                 return res.status(401).json({
                     status: 'error',
                     errors: [{ msg: error.message }]
                 });
-            }
+            if (!user.isActivated)
+                return res.status(401).json({
+                    status: 'error',
+                    errors: [
+                        { msg: 'Unauthorized. Please activate your account' }
+                    ]
+                });
             req.user = user;
             next();
         });

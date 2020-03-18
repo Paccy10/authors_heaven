@@ -28,8 +28,7 @@ class userController {
         const { dataValues: user } = await User.create(newUser);
         const payload = {
             id: user.id,
-            email: user.email,
-            isAdmin: user.isAdmin
+            email: user.email
         };
         const token = generateToken(payload);
         mailOptions.to = user.email;
@@ -87,7 +86,7 @@ class userController {
             const payload = {
                 id: user.id,
                 email: user.email,
-                isAdmin: user.isAdmin
+                isActivated: user.isActivated
             };
             const token = generateToken(payload);
             delete user.dataValues.password;
@@ -152,13 +151,45 @@ class userController {
     async getAll(req, res) {
         const parameters = {
             order: [['firstname', 'ASC']],
-            attributes: ['firstname', 'lastname', 'email', 'bio', 'image']
+            attributes: ['firstname', 'lastname', 'email', 'bio', 'image'],
+            where: { isActivated: true }
         };
         const { metaData, data } = await paginate(req, User, parameters);
         return res.status(200).json({
             status: 'success',
             message: 'Articles successfully fetched',
             data: { users: data, metaData }
+        });
+    }
+
+    async getOne(req, res) {
+        const user = await User.findOne({
+            where: { email: req.params.email, isActivated: true },
+            attributes: ['firstname', 'lastname', 'email', 'bio', 'image']
+        });
+        if (!user) {
+            return res.status(404).json({
+                status: 'error',
+                errors: [{ msg: 'User not found' }]
+            });
+        }
+        return res.status(200).json({
+            status: 'success',
+            message: 'User successfully fetched',
+            data: { user }
+        });
+    }
+
+    async getCurrent(req, res) {
+        const user = await User.findOne({
+            where: { email: req.user.email },
+            attributes: ['firstname', 'lastname', 'email', 'bio', 'image']
+        });
+
+        return res.status(200).json({
+            status: 'success',
+            message: 'User successfully fetched',
+            data: { user }
         });
     }
 }

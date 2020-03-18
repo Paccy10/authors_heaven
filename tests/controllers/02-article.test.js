@@ -3,6 +3,7 @@ import chaiHttp from 'chai-http';
 import app from '../../index';
 import { newArticle, updatedArticle, newUser } from '../data/article';
 import models from '../../models';
+import generateToken from '../../utils/generateToken';
 
 chai.use(chaiHttp);
 chai.should();
@@ -147,6 +148,25 @@ describe('Article', () => {
                 res.body.should.have.property('status').eql('error');
                 res.body.should.have.property('errors');
                 res.body.errors[0].msg.should.equal('jwt malformed');
+                done();
+            });
+    });
+
+    it('should not create an article with user that is not activated', done => {
+        const token = generateToken({ email: 'test.user2@app.com' });
+        chai.request(app)
+            .post(`${API_BASE_URL}/articles`)
+            .set('Authorization', `Bearer ${token}`)
+            .end((err, res) => {
+                if (err) {
+                    done(err);
+                }
+                res.should.status(401);
+                res.body.should.have.property('status').eql('error');
+                res.body.should.have.property('errors');
+                res.body.errors[0].msg.should.equal(
+                    'Unauthorized. Please activate your account'
+                );
                 done();
             });
     });

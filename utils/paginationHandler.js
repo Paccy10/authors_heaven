@@ -2,6 +2,7 @@ const paginate = async (req, model, parameters) => {
     const { page = 1, limit = 20 } = req.query;
     const rootUrl = `${req.protocol}://${req.headers.host}${req.baseUrl}`;
     const response = await model.findAndCountAll({
+        where: parameters.where,
         offset: (Number(page) - 1) * Number(limit),
         limit,
         order: parameters.order,

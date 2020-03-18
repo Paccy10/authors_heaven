@@ -352,4 +352,51 @@ describe('User', () => {
                 done();
             });
     });
+
+    it('should get user profile', done => {
+        chai.request(app)
+            .get(`${API_BASE_URL}/auth/profile/test.user@app.com`)
+            .set('Authorization', token)
+            .end((err, res) => {
+                if (err) {
+                    done(err);
+                }
+                res.should.status(200);
+                res.body.should.have.property('status').eql('success');
+                res.body.should.have.property('data');
+                res.body.data.should.have.property('user');
+                done();
+            });
+    });
+    it('should not get user profile if the user does not exist', done => {
+        chai.request(app)
+            .get(`${API_BASE_URL}/auth/profile/fdfd`)
+            .set('Authorization', token)
+            .end((err, res) => {
+                if (err) {
+                    done(err);
+                }
+                res.should.status(404);
+                res.body.should.have.property('status').eql('error');
+                res.body.should.have.property('errors');
+                res.body.errors[0].msg.should.equal('User not found');
+                done();
+            });
+    });
+
+    it('should get current user profile', done => {
+        chai.request(app)
+            .get(`${API_BASE_URL}/auth/profile`)
+            .set('Authorization', token)
+            .end((err, res) => {
+                if (err) {
+                    done(err);
+                }
+                res.should.status(200);
+                res.body.should.have.property('status').eql('success');
+                res.body.should.have.property('data');
+                res.body.data.should.have.property('user');
+                done();
+            });
+    });
 });
