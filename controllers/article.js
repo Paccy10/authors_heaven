@@ -1,5 +1,5 @@
 import models from '../models';
-import uploader from '../utils/imageUpload/cloudinary';
+import { uploader, destroyer } from '../utils/imageUpload/cloudinary';
 import generateSlug from '../utils/generateSlug';
 import paginate from '../utils/paginationHandler';
 
@@ -7,13 +7,7 @@ const { article: Article, user: User } = models;
 
 class articleController {
     async create(req, res) {
-        let image;
-        if (req.fileValidationError) {
-            return res.status(400).json({
-                status: 'error',
-                errors: [{ msg: req.fileValidationError }]
-            });
-        }
+        let image = null;
         if (req.file) {
             image = await uploader(req.file.path, 'authors heaven/articles');
         }
@@ -24,7 +18,7 @@ class articleController {
             slug,
             body: req.body.body,
             tags: req.body.tags ? req.body.tags.split(',') : null,
-            image: image ? image.url : null,
+            image,
             authorId: req.user.id
         };
         const { dataValues: article } = await Article.create(newArticle);
@@ -42,14 +36,7 @@ class articleController {
                 {
                     model: User,
                     as: 'author',
-                    attributes: [
-                        'id',
-                        'firstname',
-                        'lastname',
-                        'email',
-                        'image',
-                        'bio'
-                    ]
+                    attributes: ['firstname', 'lastname', 'email', 'image']
                 }
             ]
         };
@@ -82,6 +69,30 @@ class articleController {
             status: 'success',
             message: 'Article successfully fetched',
             data: { article }
+        });
+    }
+
+    async update(req, res) {
+        let { image } = req.article;
+        if (req.file) {
+            if (req.article.image) await destroyer(req.article.image.public_id);
+            image = await uploader(req.file.path, 'authors heaven/articles');
+        }
+        const newArticle = {
+            title: req.body.title,
+            slug: generateSlug(req.body.title),
+            body: req.body.body,
+            tags: req.body.tags ? req.body.tags.split(',') : null,
+            image
+        };
+        const updateResponse = await Article.update(newArticle, {
+            where: { id: req.params.id },
+            returning: true
+        });
+        return res.status(200).json({
+            status: 'success',
+            message: 'Article successfully updated',
+            data: { article: updateResponse[1][0] }
         });
     }
 }

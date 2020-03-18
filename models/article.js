@@ -6,7 +6,7 @@ const articleModel = (sequelize, DataTypes) => {
             slug: { type: DataTypes.STRING },
             body: { type: DataTypes.TEXT },
             tags: { type: DataTypes.ARRAY(DataTypes.STRING) },
-            image: { type: DataTypes.STRING },
+            image: { type: DataTypes.JSON },
             authorId: {
                 type: DataTypes.INTEGER,
                 references: { model: 'user', key: 'id' }

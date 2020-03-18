@@ -30,7 +30,7 @@ const userMigration = {
             },
             image: {
                 allowNull: true,
-                type: Sequelize.STRING
+                type: Sequelize.JSON
             },
             isAdmin: {
                 allowNull: false,

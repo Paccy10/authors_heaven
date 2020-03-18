@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 export const newUser = {
     firstname: 'Test',
     lastname: 'User',
-    email: 'test.user@app.com',
+    email: 'test.articleuser@app.com',
     password: bcrypt.hashSync('Password12345', 10),
     isActivated: true
 };
@@ -11,6 +11,11 @@ export const newUser = {
 export const newArticle = {
     title: 'Test article',
     body: 'Test article body',
-    tags: 'test,article',
-    author: 1
+    tags: 'test,article'
+};
+
+export const updatedArticle = {
+    title: 'Test updated article',
+    body: 'Test updated article body',
+    tags: 'test,article'
 };

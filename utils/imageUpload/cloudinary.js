@@ -9,7 +9,7 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-const uploader = (file, folder) => {
+export const uploader = (file, folder) => {
     return new Promise((resolve, reject) => {
         cloudinary.v2.uploader.upload(
             file,
@@ -18,11 +18,21 @@ const uploader = (file, folder) => {
                 if (error) {
                     reject(error);
                 } else {
-                    resolve({ url: result.url });
+                    resolve({ url: result.url, public_id: result.public_id });
                 }
             }
         );
     });
 };
 
-export default uploader;
+export const destroyer = publicId => {
+    return new Promise((resolve, reject) => {
+        cloudinary.v2.uploader.destroy(publicId, error => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve('Image deleted');
+            }
+        });
+    });
+};

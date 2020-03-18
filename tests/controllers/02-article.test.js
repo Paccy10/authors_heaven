@@ -1,28 +1,38 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../../index';
-import { newArticle } from '../data/article';
+import { newArticle, updatedArticle, newUser } from '../data/article';
 import models from '../../models';
 
 chai.use(chaiHttp);
 chai.should();
 
 const API_BASE_URL = '/api/v1';
-const { article: Article } = models;
+const { user: User } = models;
 
 describe('Article', () => {
     let APIToken;
+    let APIToken2;
     let jwt;
     let articleSlug;
 
     before(async () => {
+        await User.create(newUser);
         const response = await chai
             .request(app)
             .post(`${API_BASE_URL}/auth/login`)
             .send({ email: 'test.user@app.com', password: 'Password12345' });
+        const response2 = await chai
+            .request(app)
+            .post(`${API_BASE_URL}/auth/login`)
+            .send({
+                email: 'test.articleuser@app.com',
+                password: 'Password12345'
+            });
         jwt = response.body.data.token;
         APIToken = `Bearer ${jwt}`;
-    });
+        APIToken2 = `Bearer ${response2.body.data.token}`;
+    }, 10000);
 
     it('should create a new article', done => {
         chai.request(app)
@@ -182,6 +192,88 @@ describe('Article', () => {
                 res.body.should.have.property('status').eql('error');
                 res.body.should.have.property('errors');
                 res.body.errors[0].msg.should.equal('Article not found');
+                done();
+            });
+    });
+
+    it('should update an article', done => {
+        chai.request(app)
+            .put(`${API_BASE_URL}/articles/1`)
+            .set('Authorization', APIToken)
+            .set('Content-Type', 'multipart/form-data')
+            .field('title', updatedArticle.title)
+            .field('body', updatedArticle.body)
+            .field('tags', updatedArticle.tags)
+            .attach('image', 'tests/data/img/article-image.png')
+            .end((err, res) => {
+                if (err) {
+                    done(err);
+                }
+                res.should.status(200);
+                res.body.should.have.property('status').eql('success');
+                res.body.should.have
+                    .property('message')
+                    .eql('Article successfully updated');
+                res.body.should.have.property('data');
+                res.body.data.should.have.property('article');
+                res.body.data.article.title.should.equal(updatedArticle.title);
+                res.body.data.article.tags.should.be.a('array');
+                done();
+            });
+    }).timeout(10000);
+
+    it('should not update an article with an unsupported image format', done => {
+        chai.request(app)
+            .put(`${API_BASE_URL}/articles/1`)
+            .set('Authorization', APIToken)
+            .set('Content-Type', 'multipart/form-data')
+            .field('title', updatedArticle.title)
+            .field('body', updatedArticle.body)
+            .field('tags', updatedArticle.tags)
+            .attach('image', 'tests/data/article.js')
+            .end((err, res) => {
+                if (err) {
+                    done(err);
+                }
+                res.should.status(400);
+                res.body.should.have.property('status').eql('error');
+                res.body.should.have.property('errors');
+                res.body.errors[0].msg.should.equal('Unsupported file format');
+                done();
+            });
+    });
+
+    it('should not update an article with an unexisting id', done => {
+        chai.request(app)
+            .put(`${API_BASE_URL}/articles/10`)
+            .set('Authorization', APIToken)
+            .set('Content-Type', 'multipart/form-data')
+            .end((err, res) => {
+                if (err) {
+                    done(err);
+                }
+                res.should.status(404);
+                res.body.should.have.property('status').eql('error');
+                res.body.should.have.property('errors');
+                res.body.errors[0].msg.should.equal('Article not found');
+                done();
+            });
+    });
+    it('should not update an article if your are not the owner', done => {
+        chai.request(app)
+            .put(`${API_BASE_URL}/articles/1`)
+            .set('Authorization', APIToken2)
+            .set('Content-Type', 'multipart/form-data')
+            .end((err, res) => {
+                if (err) {
+                    done(err);
+                }
+                res.should.status(403);
+                res.body.should.have.property('status').eql('error');
+                res.body.should.have.property('errors');
+                res.body.errors[0].msg.should.equal(
+                    'Permission denied. You can not edit an article that is not yours'
+                );
                 done();
             });
     });

@@ -7,7 +7,7 @@ const userModel = (sequelize, DataTypes) => {
             email: { type: DataTypes.STRING },
             password: { type: DataTypes.STRING },
             bio: { type: DataTypes.TEXT },
-            image: { type: DataTypes.STRING },
+            image: { type: DataTypes.JSON },
             isAdmin: { type: DataTypes.BOOLEAN },
             isActivated: { type: DataTypes.BOOLEAN }
             // allowNotifications: { type: DataTypes.BOOLEAN }

@@ -37,7 +37,6 @@ class userController {
             status: 'success',
             message: 'User successfully created. Check your email to continue',
             data: {
-                token,
                 emailResponse,
                 user
             }

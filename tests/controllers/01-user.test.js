@@ -13,6 +13,7 @@ import {
     loginUser3
 } from '../data/user';
 import models from '../../models';
+import generateToken from '../../utils/generateToken';
 
 chai.use(chaiHttp);
 chai.should();
@@ -21,8 +22,7 @@ const API_BASE_URL = '/api/v1';
 const { user: User } = models;
 
 describe('User', () => {
-    let verifyToken;
-
+    const verifyToken = generateToken({ email: 'test.user@app.com' });
     before(async () => {
         try {
             await User.create(newUser2);
@@ -40,13 +40,10 @@ describe('User', () => {
                     done(error);
                 }
 
-                verifyToken = res.body.data.token;
-
                 res.should.status(201);
                 res.body.should.have.property('status').eql('success');
                 res.body.should.have.property('data');
                 res.body.data.should.have.property('user');
-                res.body.data.should.have.property('token');
                 res.body.data.user.email.should.equal(newUser.email);
                 res.body.data.should.have.property('emailResponse');
                 res.body.data.emailResponse.should.equal(
@@ -54,7 +51,7 @@ describe('User', () => {
                 );
                 done();
             });
-    }).timeout(15000);
+    }).timeout(20000);
 
     it('should not create a new user with invalid data', done => {
         chai.request(app)

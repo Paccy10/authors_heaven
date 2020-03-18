@@ -25,7 +25,7 @@ const articleMigration = {
                 allowNull: true
             },
             image: {
-                type: Sequelize.STRING,
+                type: Sequelize.JSON,
                 allowNull: true
             },
             authorId: {
