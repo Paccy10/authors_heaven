@@ -3,7 +3,10 @@ import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 import generateToken from '../utils/generateToken';
 import models from '../models';
-import { comfirmationEmail } from '../utils/emails/emailTemplates';
+import {
+    comfirmationEmail,
+    resetPasswordEmail
+} from '../utils/emails/emailTemplates';
 import sendEmail from '../utils/emails/sendEmail';
 
 dotenv.config();
@@ -97,6 +100,51 @@ class userController {
         return res.status(400).send({
             status: 'error',
             errors: [{ msg: 'Incorrect username or password' }]
+        });
+    }
+
+    async requestPasswordReset(req, res) {
+        const { email } = req.body;
+        const user = await User.findOne({ where: { email } });
+        if (!user) {
+            return res.status(404).send({
+                status: 'error',
+                errors: [{ msg: 'User not found' }]
+            });
+        }
+        const payload = {
+            id: user.id,
+            email: user.email
+        };
+        const token = generateToken(payload);
+        mailOptions.to = email;
+        mailOptions.subject = 'Password Reset';
+        mailOptions.html = resetPasswordEmail(token, user);
+        const emailResponse = await sendEmail(mailOptions);
+        return res.json({
+            status: 'success',
+            message:
+                'Password reset link successfully sent. Please check your email to continue',
+            data: { emailResponse }
+        });
+    }
+
+    async resetPassword(req, res) {
+        const payload = jwt.decode(req.body.token, process.env.SECRET_KEY);
+        if (!payload) {
+            return res.status(400).send({
+                status: 'error',
+                errors: [{ msg: 'Invalid token' }]
+            });
+        }
+        const newPassword = bcrypt.hashSync(req.body.password, 10);
+        await User.update(
+            { password: newPassword },
+            { where: { email: payload.email }, returning: true }
+        );
+        return res.status(200).json({
+            status: 'success',
+            message: 'Password successfully changed'
         });
     }
 }

@@ -17,7 +17,7 @@ const sendEmail = mailOptions => {
             if (error) {
                 reject(error);
             } else {
-                resolve('Account activation link sent');
+                resolve('Email sent');
             }
         });
     });

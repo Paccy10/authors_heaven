@@ -220,7 +220,7 @@ describe('Article', () => {
                 res.body.data.article.tags.should.be.a('array');
                 done();
             });
-    }).timeout(10000);
+    }).timeout(15000);
 
     it('should not update an article with an unsupported image format', done => {
         chai.request(app)

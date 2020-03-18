@@ -44,3 +44,14 @@ export const loginValidators = [
         .not()
         .isEmpty()
 ];
+
+export const resetPasswordValidators = [
+    check('email', 'Email is required')
+        .trim()
+        .not()
+        .isEmpty(),
+    check('token', 'Token is required')
+        .trim()
+        .not()
+        .isEmpty()
+];

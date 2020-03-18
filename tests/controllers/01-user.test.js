@@ -9,8 +9,7 @@ import {
     invalidUserWithUppercasePassword,
     invalidUserWithoutDigit,
     loginUser,
-    loginUser2,
-    loginUser3
+    loginUser2
 } from '../data/user';
 import models from '../../models';
 import generateToken from '../../utils/generateToken';
@@ -23,6 +22,7 @@ const { user: User } = models;
 
 describe('User', () => {
     const verifyToken = generateToken({ email: 'test.user@app.com' });
+    const passwordResetToken = generateToken({ email: 'test.user@app.com' });
     before(async () => {
         try {
             await User.create(newUser2);
@@ -46,9 +46,7 @@ describe('User', () => {
                 res.body.data.should.have.property('user');
                 res.body.data.user.email.should.equal(newUser.email);
                 res.body.data.should.have.property('emailResponse');
-                res.body.data.emailResponse.should.equal(
-                    'Account activation link sent'
-                );
+                res.body.data.emailResponse.should.equal('Email sent');
                 done();
             });
     }).timeout(20000);
@@ -210,6 +208,25 @@ describe('User', () => {
             });
     });
 
+    it('should not login a user with incorrect credentials', done => {
+        chai.request(app)
+            .post(`${API_BASE_URL}/auth/login`)
+            .send({ email: 'test', password: 'good' })
+            .end((error, res) => {
+                if (error) {
+                    done(error);
+                }
+
+                res.should.status(400);
+                res.body.should.have.property('status').eql('error');
+                res.body.should.have.property('errors');
+                res.body.errors[0].msg.should.equal(
+                    'Incorrect username or password'
+                );
+                done();
+            });
+    });
+
     it('should not login a user if no credentials provided', done => {
         chai.request(app)
             .post(`${API_BASE_URL}/auth/login`)
@@ -247,21 +264,72 @@ describe('User', () => {
             });
     });
 
-    it('should not login a user that is not activated', done => {
+    it('should send password reset link', done => {
         chai.request(app)
-            .post(`${API_BASE_URL}/auth/login`)
-            .send(loginUser3)
+            .post(`${API_BASE_URL}/auth/reset-password`)
+            .send({ email: 'test.user@app.com' })
             .end((error, res) => {
                 if (error) {
                     done(error);
                 }
 
+                res.should.status(200);
+                res.body.should.have.property('status').eql('success');
+                res.body.should.have
+                    .property('message')
+                    .eql(
+                        'Password reset link successfully sent. Please check your email to continue'
+                    );
+                done();
+            });
+    }).timeout(15000);
+
+    it('should not send password reset linkif user does not exist ', done => {
+        chai.request(app)
+            .post(`${API_BASE_URL}/auth/reset-password`)
+            .send({ email: 'test.user100@app.com' })
+            .end((error, res) => {
+                if (error) {
+                    done(error);
+                }
+
+                res.should.status(404);
+                res.body.should.have.property('status').eql('error');
+                res.body.should.have.property('errors');
+                res.body.errors[0].msg.should.equal('User not found');
+                done();
+            });
+    });
+
+    it('should update user password', done => {
+        chai.request(app)
+            .patch(`${API_BASE_URL}/auth/reset-password`)
+            .send({ token: passwordResetToken, password: 'Password12345' })
+            .end((error, res) => {
+                if (error) {
+                    done(error);
+                }
+                res.should.status(200);
+                res.body.should.have.property('status').eql('success');
+                res.body.should.have
+                    .property('message')
+                    .eql('Password successfully changed');
+                done();
+            });
+    });
+
+    it('should not update user password with invalid token', done => {
+        chai.request(app)
+            .patch(`${API_BASE_URL}/auth/reset-password`)
+            .send({ token: 'fdfdfd', password: 'Password12345' })
+            .end((error, res) => {
+                if (error) {
+                    done(error);
+                }
                 res.should.status(400);
                 res.body.should.have.property('status').eql('error');
                 res.body.should.have.property('errors');
-                res.body.errors[0].msg.should.equal(
-                    'Incorrect username or password'
-                );
+                res.body.errors[0].msg.should.equal('Invalid token');
                 done();
             });
     });
