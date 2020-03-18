@@ -277,4 +277,20 @@ describe('Article', () => {
                 done();
             });
     });
+    it('should delete an article', done => {
+        chai.request(app)
+            .delete(`${API_BASE_URL}/articles/1`)
+            .set('Authorization', APIToken)
+            .end((err, res) => {
+                if (err) {
+                    done(err);
+                }
+                res.should.status(200);
+                res.body.should.have.property('status').eql('success');
+                res.body.should.have
+                    .property('message')
+                    .eql('Article successfully deleted');
+                done();
+            });
+    }).timeout(10000);
 });

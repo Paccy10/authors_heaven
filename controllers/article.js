@@ -95,6 +95,17 @@ class articleController {
             data: { article: updateResponse[1][0] }
         });
     }
+
+    async delete(req, res) {
+        if (req.article.image) {
+            await destroyer(req.article.image.public_id);
+        }
+        await Article.destroy({ where: { id: req.params.id } });
+        return res.status(200).json({
+            status: 'success',
+            message: 'Article successfully deleted'
+        });
+    }
 }
 
 export default articleController;

@@ -30,5 +30,11 @@ router.put(
     validate,
     asyncHandler(article.update)
 );
+router.delete(
+    '/:id',
+    auth,
+    asyncHandler(checkArticle),
+    asyncHandler(article.delete)
+);
 
 export default router;
