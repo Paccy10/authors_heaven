@@ -279,6 +279,26 @@ describe('Article', () => {
                 done();
             });
     });
+
+    it('should not update an article if the id is not an integer', done => {
+        chai.request(app)
+            .put(`${API_BASE_URL}/articles/hg`)
+            .set('Authorization', APIToken)
+            .set('Content-Type', 'multipart/form-data')
+            .end((err, res) => {
+                if (err) {
+                    done(err);
+                }
+                res.should.status(500);
+                res.body.should.have.property('status').eql('error');
+                res.body.should.have.property('errors');
+                res.body.errors[0].msg.should.equal(
+                    'invalid input syntax for integer: "hg"'
+                );
+                done();
+            });
+    });
+
     it('should not update an article if your are not the owner', done => {
         chai.request(app)
             .put(`${API_BASE_URL}/articles/1`)

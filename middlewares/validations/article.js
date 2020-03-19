@@ -10,6 +10,12 @@ export const checkArticle = async (req, res, next) => {
             errors: [{ msg: 'Article not found' }]
         });
     }
+    req.article = article;
+    next();
+};
+
+export const checkArticleAuthor = async (req, res, next) => {
+    const article = await Article.findByPk(req.params.id);
     if (article.authorId !== req.user.id) {
         return res.status(403).json({
             status: 'error',
@@ -21,6 +27,5 @@ export const checkArticle = async (req, res, next) => {
             ]
         });
     }
-    req.article = article;
     next();
 };

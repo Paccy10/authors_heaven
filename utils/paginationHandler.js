@@ -20,7 +20,7 @@ const paginate = async (req, model, parameters) => {
                 ? `${rootUrl}?page=${parseInt(page, 10) + 1}&limit=${limit}`
                 : null,
         totalPages: Math.ceil(response.count / limit),
-        limit: parseInt(limit, 10)
+        totalRecords: response.count
     };
 
     return { metaData, data: response.rows };
