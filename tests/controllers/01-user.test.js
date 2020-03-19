@@ -4,12 +4,14 @@ import app from '../../index';
 import {
     newUser,
     newUser2,
+    newUser3,
     newInvalidUser,
     invalidUserWithLowercasePassword,
     invalidUserWithUppercasePassword,
     invalidUserWithoutDigit,
     loginUser,
-    loginUser2
+    loginUser2,
+    updatedUser
 } from '../data/user';
 import models from '../../models';
 import generateToken from '../../utils/generateToken';
@@ -27,6 +29,7 @@ describe('User', () => {
     before(async () => {
         try {
             await User.create(newUser2);
+            await User.create(newUser3);
         } catch (error) {
             console.log(error);
         }
@@ -399,4 +402,27 @@ describe('User', () => {
                 done();
             });
     });
+
+    it('should update user profile', done => {
+        chai.request(app)
+            .put(`${API_BASE_URL}/auth/profile`)
+            .set('Authorization', token)
+            .set('Content-Type', 'multipart/form-data')
+            .field('firstname', updatedUser.firstname)
+            .field('lastname', updatedUser.lastname)
+            .field('bio', updatedUser.bio)
+            .attach('image', 'tests/data/img/article-image.png')
+            .end((error, res) => {
+                if (error) {
+                    done(error);
+                }
+                res.should.status(200);
+                res.body.should.have.property('status').eql('success');
+                res.body.should.have
+                    .property('message')
+                    .eql('User profile successfully updated');
+                res.body.should.have.property('data');
+                done();
+            });
+    }).timeout(15000);
 });

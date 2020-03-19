@@ -9,6 +9,7 @@ import asyncHandler from '../middlewares/errors/asyncHandler';
 import { validate } from '../middlewares/validations';
 import { checkEmail } from '../middlewares/validations/user';
 import auth from '../middlewares/auth';
+import upload from '../utils/imageUpload/multer';
 
 const router = express.Router();
 const user = new User();
@@ -38,5 +39,13 @@ router.patch(
 router.get('/', auth, asyncHandler(user.getAll));
 router.get('/profile', auth, asyncHandler(user.getCurrent));
 router.get('/profile/:email', auth, asyncHandler(user.getOne));
+router.put(
+    '/profile',
+    auth,
+    upload.single('image'),
+    [signupValidators[0], signupValidators[1]],
+    validate,
+    asyncHandler(user.update)
+);
 
 export default router;

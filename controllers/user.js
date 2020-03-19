@@ -9,6 +9,7 @@ import {
 } from '../utils/emails/emailTemplates';
 import sendEmail from '../utils/emails/sendEmail';
 import paginate from '../utils/paginationHandler';
+import { uploader, destroyer } from '../utils/imageUpload/cloudinary';
 
 dotenv.config();
 
@@ -190,6 +191,31 @@ class userController {
             status: 'success',
             message: 'User successfully fetched',
             data: { user }
+        });
+    }
+
+    async update(req, res) {
+        const user = await User.findByPk(req.user.id);
+        let { image } = user;
+        if (req.file) {
+            if (user.image) await destroyer(image.public_id);
+            image = await uploader(req.file.path, 'authors heaven/users');
+        }
+        const newProfile = {
+            firstname: req.body.firstname,
+            lastname: req.body.lastname,
+            bio: req.body.bio,
+            image
+        };
+        const updateResponse = await User.update(newProfile, {
+            where: { id: user.id },
+            returning: true
+        });
+        delete updateResponse[1][0].dataValues.password;
+        return res.status(200).json({
+            status: 'success',
+            message: 'User profile successfully updated',
+            data: { user: updateResponse[1][0] }
         });
     }
 }
