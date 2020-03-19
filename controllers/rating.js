@@ -1,6 +1,7 @@
 import models from '../models';
+import paginate from '../utils/paginationHandler';
 
-const { rating: Rating } = models;
+const { rating: Rating, user: User } = models;
 
 class RatingController {
     async create(req, res) {
@@ -28,6 +29,25 @@ class RatingController {
             status: 'success',
             message,
             data: { rating: rate }
+        });
+    }
+
+    async getAll(req, res) {
+        const parameters = {
+            order: [['id', 'DESC']],
+            include: [
+                {
+                    model: User,
+                    as: 'user',
+                    attributes: ['firstname', 'lastname', 'image']
+                }
+            ]
+        };
+        const { metaData, data } = await paginate(req, Rating, parameters);
+        return res.status(200).json({
+            status: 'success',
+            message: 'Ratings successfully fetched',
+            data: { ratings: data, metaData }
         });
     }
 }

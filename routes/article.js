@@ -59,6 +59,12 @@ router.post(
     asyncHandler(rating.create)
 );
 
+router.get(
+    '/:articleId/ratings',
+    asyncHandler(checkArticle),
+    asyncHandler(rating.getAll)
+);
+
 // Comments
 router.post(
     '/:articleId/comments',
