@@ -1,6 +1,7 @@
 import express from 'express';
 import Article from '../controllers/article';
 import Rating from '../controllers/rating';
+import Comment from '../controllers/comment';
 import auth from '../middlewares/auth';
 import asyncHandler from '../middlewares/errors/asyncHandler';
 import { validate } from '../middlewares/validations';
@@ -10,11 +11,13 @@ import {
 } from '../middlewares/validations/article';
 import { newArticleValitors } from '../utils/validationRules/article';
 import { newRatingValitors } from '../utils/validationRules/rating';
+import { newCommentValitors } from '../utils/validationRules/comment';
 import upload from '../utils/imageUpload/multer';
 
 const router = express.Router();
 const article = new Article();
 const rating = new Rating();
+const comment = new Comment();
 
 // Articles
 router.post(
@@ -29,7 +32,7 @@ router.post(
 router.get('/', asyncHandler(article.getAll));
 router.get('/:slug', asyncHandler(article.getOne));
 router.put(
-    '/:id',
+    '/:articleId',
     auth,
     asyncHandler(checkArticle),
     asyncHandler(checkArticleAuthor),
@@ -39,7 +42,7 @@ router.put(
     asyncHandler(article.update)
 );
 router.delete(
-    '/:id',
+    '/:articleId',
     auth,
     asyncHandler(checkArticle),
     asyncHandler(checkArticleAuthor),
@@ -48,12 +51,22 @@ router.delete(
 
 // Ratings
 router.post(
-    '/:id/rate',
+    '/:articleId/ratings',
     auth,
     asyncHandler(checkArticle),
     newRatingValitors,
     validate,
     asyncHandler(rating.create)
+);
+
+// Comments
+router.post(
+    '/:articleId/comments',
+    auth,
+    asyncHandler(checkArticle),
+    newCommentValitors,
+    validate,
+    asyncHandler(comment.create)
 );
 
 export default router;

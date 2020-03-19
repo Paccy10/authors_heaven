@@ -6,7 +6,7 @@ class RatingController {
     async create(req, res) {
         const rating = parseInt(req.body.rating, 10);
         const userId = req.user.id;
-        const articleId = req.params.id;
+        const { articleId } = req.params;
         let message = 'Rating successfully created';
         let status = 201;
 

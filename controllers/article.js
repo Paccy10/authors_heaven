@@ -21,7 +21,7 @@ class articleController {
             image,
             authorId: req.user.id
         };
-        const { dataValues: article } = await Article.create(newArticle);
+        const article = await Article.create(newArticle);
         res.status(201).json({
             status: 'success',
             message: 'Article successfully created',
@@ -86,7 +86,7 @@ class articleController {
             image
         };
         const updateResponse = await Article.update(newArticle, {
-            where: { id: req.params.id },
+            where: { id: req.params.articleId },
             returning: true
         });
         return res.status(200).json({
@@ -100,7 +100,7 @@ class articleController {
         if (req.article.image) {
             await destroyer(req.article.image.public_id);
         }
-        await Article.destroy({ where: { id: req.params.id } });
+        await Article.destroy({ where: { id: req.params.articleId } });
         return res.status(200).json({
             status: 'success',
             message: 'Article successfully deleted'

@@ -1,14 +1,12 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../../index';
-import models from '../../models';
 import { newArticle } from '../data/article';
 
 chai.use(chaiHttp);
 chai.should();
 
 const API_BASE_URL = '/api/v1';
-const { article: Article } = models;
 
 describe('Rating', () => {
     let APIToken;
@@ -33,7 +31,7 @@ describe('Rating', () => {
 
     it('should create a rating for an article', done => {
         chai.request(app)
-            .post(`${API_BASE_URL}/articles/2/rate`)
+            .post(`${API_BASE_URL}/articles/2/ratings`)
             .set('Authorization', APIToken)
             .send({ rating: 4 })
             .end((err, res) => {
@@ -54,7 +52,7 @@ describe('Rating', () => {
 
     it('should update a rating for an article', done => {
         chai.request(app)
-            .post(`${API_BASE_URL}/articles/2/rate`)
+            .post(`${API_BASE_URL}/articles/2/ratings`)
             .set('Authorization', APIToken)
             .send({ rating: 3 })
             .end((err, res) => {

@@ -26,7 +26,7 @@ class userController {
     async signup(req, res) {
         const newUser = req.body;
         newUser.password = bcrypt.hashSync(newUser.password, 10);
-        const { dataValues: user } = await User.create(newUser);
+        const user = await User.create(newUser);
         const payload = {
             id: user.id,
             email: user.email
@@ -35,7 +35,7 @@ class userController {
         mailOptions.to = user.email;
         mailOptions.html = comfirmationEmail(token, user);
         const emailResponse = await sendEmail(mailOptions);
-        delete user.password;
+        delete user.dataValues.password;
 
         return res.status(201).json({
             status: 'success',

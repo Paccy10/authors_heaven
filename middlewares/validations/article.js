@@ -3,7 +3,7 @@ import models from '../../models';
 const { article: Article } = models;
 
 export const checkArticle = async (req, res, next) => {
-    const article = await Article.findByPk(req.params.id);
+    const article = await Article.findByPk(req.params.articleId);
     if (!article) {
         return res.status(404).json({
             status: 'error',
@@ -15,7 +15,7 @@ export const checkArticle = async (req, res, next) => {
 };
 
 export const checkArticleAuthor = async (req, res, next) => {
-    const article = await Article.findByPk(req.params.id);
+    const article = await Article.findByPk(req.params.articleId);
     if (article.authorId !== req.user.id) {
         return res.status(403).json({
             status: 'error',
