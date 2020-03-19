@@ -198,6 +198,7 @@ describe('Article', () => {
                 res.body.should.have.property('status').eql('success');
                 res.body.should.have.property('data');
                 res.body.data.should.have.property('article');
+                res.body.data.article.should.have.property('readingTime');
                 done();
             });
     });

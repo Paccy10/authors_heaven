@@ -2,6 +2,7 @@ import models from '../models';
 import { uploader, destroyer } from '../utils/imageUpload/cloudinary';
 import generateSlug from '../utils/generateSlug';
 import paginate from '../utils/paginationHandler';
+import calculateReadingTime from '../utils/calculateReadingTime';
 
 const { article: Article, user: User } = models;
 
@@ -55,7 +56,7 @@ class articleController {
                 {
                     model: User,
                     as: 'author',
-                    attributes: ['firstname', 'lastname', 'email', 'image']
+                    attributes: ['firstname', 'lastname', 'image']
                 }
             ]
         });
@@ -65,6 +66,9 @@ class articleController {
                 errors: [{ msg: 'Article not found' }]
             });
         }
+        article.dataValues.readingTime = calculateReadingTime(
+            article.title + article.body
+        );
         return res.status(200).json({
             status: 'success',
             message: 'Article successfully fetched',
