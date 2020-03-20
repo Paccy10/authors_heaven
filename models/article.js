@@ -20,6 +20,10 @@ const articleModel = (sequelize, DataTypes) => {
             as: 'author',
             onDelete: 'CASCADE'
         });
+        Article.hasMany(models.rating, { foreignKey: 'articleId' });
+        Article.hasMany(models.comment, { foreignKey: 'articleId' });
+        Article.hasMany(models.vote, { foreignKey: 'articleId' });
+        Article.hasMany(models.reportArticle, { foreignKey: 'articleId' });
     };
     return Article;
 };

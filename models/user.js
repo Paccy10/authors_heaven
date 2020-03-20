@@ -18,6 +18,8 @@ const userModel = (sequelize, DataTypes) => {
         User.hasMany(models.article, { foreignKey: 'authorId' });
         User.hasMany(models.rating, { foreignKey: 'userId' });
         User.hasMany(models.comment, { foreignKey: 'userId' });
+        User.hasMany(models.vote, { foreignKey: 'userId' });
+        User.hasMany(models.reportArticle, { foreignKey: 'reporterId' });
     };
     return User;
 };

@@ -3,6 +3,7 @@ import Article from '../controllers/article';
 import Rating from '../controllers/rating';
 import Comment from '../controllers/comment';
 import Vote from '../controllers/vote';
+import Report from '../controllers/report';
 import auth from '../middlewares/auth';
 import asyncHandler from '../middlewares/errors/asyncHandler';
 import { validate } from '../middlewares/validations';
@@ -15,9 +16,11 @@ import {
     checkLike,
     checkDislike
 } from '../middlewares/validations/vote';
+import { checkReportTypeExist } from '../middlewares/validations/report';
 import { newArticleValitors } from '../utils/validationRules/article';
-import { newRatingValitors } from '../utils/validationRules/rating';
+import { newRatingValidators } from '../utils/validationRules/rating';
 import { newCommentValitors } from '../utils/validationRules/comment';
+import { newReportArticleValidators } from '../utils/validationRules/report';
 import upload from '../utils/imageUpload/multer';
 
 const router = express.Router();
@@ -25,6 +28,7 @@ const article = new Article();
 const rating = new Rating();
 const comment = new Comment();
 const vote = new Vote();
+const report = new Report();
 
 // Articles
 router.post(
@@ -61,7 +65,7 @@ router.post(
     '/:articleId/ratings',
     auth,
     asyncHandler(checkArticle),
-    newRatingValitors,
+    newRatingValidators,
     validate,
     asyncHandler(rating.create)
 );
@@ -99,6 +103,17 @@ router.post(
     asyncHandler(checkVote),
     asyncHandler(checkDislike),
     asyncHandler(vote.dislike)
+);
+
+// Report Article
+router.post(
+    '/:articleId/report',
+    auth,
+    asyncHandler(checkArticle),
+    newReportArticleValidators,
+    validate,
+    asyncHandler(checkReportTypeExist),
+    asyncHandler(report.reportArticle)
 );
 
 export default router;
