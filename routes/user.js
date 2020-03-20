@@ -1,5 +1,6 @@
 import express from 'express';
 import User from '../controllers/user';
+import ReadingStats from '../controllers/readingStats';
 import {
     signupValidators,
     loginValidators,
@@ -13,6 +14,7 @@ import upload from '../utils/imageUpload/multer';
 
 const router = express.Router();
 const user = new User();
+const readingStats = new ReadingStats();
 
 router.post(
     '/signup',
@@ -37,6 +39,8 @@ router.patch(
     asyncHandler(user.resetPassword)
 );
 router.get('/', auth, asyncHandler(user.getAll));
+
+// Profile
 router.get('/profile', auth, asyncHandler(user.getCurrent));
 router.get('/profile/:email', auth, asyncHandler(user.getOne));
 router.put(
@@ -47,5 +51,8 @@ router.put(
     validate,
     asyncHandler(user.update)
 );
+
+// Reading stats
+router.get('/readings', auth, asyncHandler(readingStats.getUserReadingStats));
 
 export default router;

@@ -4,6 +4,7 @@ import Rating from '../controllers/rating';
 import Comment from '../controllers/comment';
 import Vote from '../controllers/vote';
 import Report from '../controllers/report';
+import ReadingStats from '../controllers/readingStats';
 import auth from '../middlewares/auth';
 import asyncHandler from '../middlewares/errors/asyncHandler';
 import { validate } from '../middlewares/validations';
@@ -29,6 +30,7 @@ const rating = new Rating();
 const comment = new Comment();
 const vote = new Vote();
 const report = new Report();
+const readingStats = new ReadingStats();
 
 // Articles
 router.post(
@@ -114,6 +116,14 @@ router.post(
     validate,
     asyncHandler(checkReportTypeExist),
     asyncHandler(report.reportArticle)
+);
+
+// Reading Stats
+router.post(
+    '/:articleId/readings',
+    auth,
+    asyncHandler(checkArticle),
+    asyncHandler(readingStats.create)
 );
 
 export default router;
