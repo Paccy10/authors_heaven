@@ -38,7 +38,6 @@ class RatingController {
             include: [
                 {
                     model: User,
-                    as: 'user',
                     attributes: ['firstname', 'lastname', 'image']
                 }
             ]
