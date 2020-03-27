@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "start": "nodemon --require babel-register index.js",
-        "test": "node_modules/.bin/sequelize db:migrate:undo:all --env test && node_modules/.bin/sequelize db:migrate --env test && NODE_ENV=test nyc --reporter=html --reporter=text mocha --timeout 150000 --require babel-register tests/* --exit",
+        "test": "node_modules/.bin/sequelize db:migrate:undo:all --env test && node_modules/.bin/sequelize db:migrate --env test && node_modules/.bin/sequelize db:seed:all --env test && NODE_ENV=test nyc --reporter=html --reporter=text mocha --timeout 150000 --require babel-register tests/* --exit",
         "migrate": "node_modules/.bin/sequelize db:migrate",
         "coverage": "nyc report --reporter=text-lcov | coveralls"
     },

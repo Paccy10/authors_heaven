@@ -8,13 +8,20 @@ const userModel = (sequelize, DataTypes) => {
             password: { type: DataTypes.STRING },
             bio: { type: DataTypes.TEXT },
             image: { type: DataTypes.JSON },
-            isAdmin: { type: DataTypes.BOOLEAN },
-            isActivated: { type: DataTypes.BOOLEAN }
-            // allowNotifications: { type: DataTypes.BOOLEAN }
+            isActivated: { type: DataTypes.BOOLEAN },
+            roleId: {
+                type: DataTypes.INTEGER,
+                references: { model: 'role', key: 'id' }
+            }
         },
         {}
     );
     User.associate = models => {
+        User.belongsTo(models.role, {
+            foreignKey: 'roleId',
+            as: 'role',
+            onDelete: 'CASCADE'
+        });
         User.hasMany(models.article, { foreignKey: 'authorId' });
         User.hasMany(models.rating, { foreignKey: 'userId' });
         User.hasMany(models.comment, { foreignKey: 'userId' });

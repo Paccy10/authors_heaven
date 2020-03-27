@@ -49,7 +49,11 @@ class ReportArticleController {
             include: [
                 { model: ReportType, attributes: ['type'] },
                 { model: Article, attributes: ['title', 'body'] },
-                { model: User, attributes: ['firstname', 'lastname', 'image'] }
+                {
+                    model: User,
+                    as: 'reporter',
+                    attributes: ['firstname', 'lastname', 'image']
+                }
             ]
         });
         return res.status(200).json({

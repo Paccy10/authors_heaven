@@ -4,14 +4,16 @@ export const newUser = {
     firstname: 'Test',
     lastname: 'User',
     email: 'test.user@app.com',
-    password: 'Password12345'
+    password: 'Password12345',
+    roleId: 3
 };
 
 export const newUser2 = {
     firstname: 'Test',
     lastname: 'User',
     email: 'test.user2@app.com',
-    password: bcrypt.hashSync('Password12345', 10)
+    password: bcrypt.hashSync('Password12345', 10),
+    roleId: 3
 };
 
 export const newUser3 = {
@@ -24,7 +26,8 @@ export const newUser3 = {
             'http://res.cloudinary.com/dhsoe7agl/image/upload/v1584607994/authors%20heaven/users/jdgetoiuc6scvtz1sbw2.png',
         public_id: 'authors heaven/users/jdgetoiuc6scvtz1sbw2'
     },
-    isActivated: true
+    isActivated: true,
+    roleId: 3
 };
 
 export const newInvalidUser = {

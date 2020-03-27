@@ -29,6 +29,7 @@ const reportArticleModel = (sequelize, DataTypes) => {
         });
         ReportArticle.belongsTo(models.user, {
             foreignKey: 'reporterId',
+            as: 'reporter',
             onDelete: 'CASCADE'
         });
     };

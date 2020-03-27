@@ -13,7 +13,7 @@ import { uploader, destroyer } from '../utils/imageUpload/cloudinary';
 
 dotenv.config();
 
-const { user: User } = models;
+const { user: User, role: Role } = models;
 
 const mailOptions = {
     to: '',
@@ -24,13 +24,17 @@ const mailOptions = {
 
 class userController {
     async signup(req, res) {
-        const newUser = req.body;
+        const role = await Role.findOne({ where: { title: 'Author' } });
+        const newUser = {
+            firstname: req.body.firstname,
+            lastname: req.body.lastname,
+            email: req.body.email,
+            password: req.body.password,
+            roleId: role.id
+        };
         newUser.password = bcrypt.hashSync(newUser.password, 10);
         const user = await User.create(newUser);
-        const payload = {
-            id: user.id,
-            email: user.email
-        };
+        const payload = { id: user.id, email: user.email };
         const token = generateToken(payload);
         mailOptions.to = user.email;
         mailOptions.html = comfirmationEmail(token, user);
@@ -40,10 +44,7 @@ class userController {
         return res.status(201).json({
             status: 'success',
             message: 'User successfully created. Check your email to continue',
-            data: {
-                emailResponse,
-                user
-            }
+            data: { emailResponse, user }
         });
     }
 
@@ -78,16 +79,16 @@ class userController {
     async login(req, res) {
         const user = await User.findOne({ where: { email: req.body.email } });
         if (user && bcrypt.compareSync(req.body.password, user.password)) {
-            if (!user.isActivated) {
+            if (!user.isActivated)
                 return res.status(400).send({
                     status: 'error',
                     errors: [{ msg: 'Please activate your account' }]
                 });
-            }
             const payload = {
                 id: user.id,
                 email: user.email,
-                isActivated: user.isActivated
+                isActivated: user.isActivated,
+                roleId: user.roleId
             };
             const token = generateToken(payload);
             delete user.dataValues.password;

@@ -32,15 +32,19 @@ const userMigration = {
                 allowNull: true,
                 type: Sequelize.JSON
             },
-            isAdmin: {
-                allowNull: false,
-                type: Sequelize.BOOLEAN,
-                defaultValue: false
-            },
             isActivated: {
                 allowNull: false,
                 type: Sequelize.BOOLEAN,
                 defaultValue: false
+            },
+            roleId: {
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                onDelete: 'CASCADE',
+                references: {
+                    model: 'roles',
+                    key: 'id'
+                }
             },
             createdAt: {
                 allowNull: false,
