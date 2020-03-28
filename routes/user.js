@@ -68,4 +68,12 @@ router.post(
     asyncHandler(user.loginViaSocialMedia)
 );
 
+router.post(
+    '/login/facebook',
+    loginViaSocilMediaValidators,
+    validate,
+    passport.authenticate('facebook', { session: false }),
+    asyncHandler(user.loginViaSocialMedia)
+);
+
 export default router;

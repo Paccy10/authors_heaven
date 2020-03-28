@@ -81,5 +81,10 @@ export const updatedUser = {
 
 export const googleUser = {
     access_token:
-        'ya29.a0Adw1xeW6GbPmZBM17xedFQUoo04WqOzP8ZVU3lxMdmaHVt-pIKb3mvSgVZWmnhpLq4_VA7L_tgHSUiQLeBNePJzd2YWNBThJnqz_YSt9-TDBRy8EjLTHpKibFJpc8pXfzVAZ7Zcoy6XkCbNftXMR5ILIHL0gKRX3wLE'
+        'ya29.a0Adw1xeWxaAiyuFCoHVNJXOVifWEPpdLTzC-6zK0T0BhH6P0N7fdvC5z-xEww6J5OI092gHwPn2XKffz667Dmd3Cvd3rN4J9kGfK8CbG2EjO0YWJz0lAtRBGDWBEr0n3ldwWvEAKJI6nVl6yNIXAnPVgclllISGf5vTo'
+};
+
+export const facebookUser = {
+    access_token:
+        'EAADjRsgzs0EBAMstN67sPG9EWL2KZAFv1uFYTC94EFOuyEkVCJYX2bgnpJK0Ci3P9JtZClASXXzcx4JyXxnmHXru2ngAuJs8ymqN6Ks0yaaZBsdPUeOCGTZCfec7dURue8pE8mPzYtMZAc7T5T46KRw8LjYy3MP9ZBSnGKHDl0SEtuTYznSsHx238IT0nonZA8uXZBFwzd52P7XK7qirUO71ZCfDOHvRplxkZBEhJY8SVGZAgOUEzFmlZC4t'
 };
