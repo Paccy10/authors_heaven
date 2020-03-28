@@ -1,15 +1,19 @@
 import express from 'express';
+import passport from 'passport';
 import User from '../controllers/user';
 import ReadingStats from '../controllers/readingStats';
 import {
     signupValidators,
     loginValidators,
-    resetPasswordValidators
+    resetPasswordValidators,
+    loginViaSocilMediaValidators
 } from '../utils/validationRules/user';
 import asyncHandler from '../middlewares/errors/asyncHandler';
 import { validate } from '../middlewares/validations';
 import { checkEmail } from '../middlewares/validations/user';
 import auth from '../middlewares/auth';
+// eslint-disable-next-line no-unused-vars
+import passportConf from '../middlewares/passport';
 import upload from '../utils/imageUpload/multer';
 
 const router = express.Router();
@@ -54,5 +58,14 @@ router.put(
 
 // Reading stats
 router.get('/readings', auth, asyncHandler(readingStats.getUserReadingStats));
+
+// Social Login
+router.post(
+    '/login/google',
+    loginViaSocilMediaValidators,
+    validate,
+    passport.authenticate('google', { session: false }),
+    asyncHandler(user.loginViaSocialMedia)
+);
 
 export default router;

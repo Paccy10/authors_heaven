@@ -21,7 +21,7 @@ const userMigration = {
                 unique: true
             },
             password: {
-                allowNull: false,
+                allowNull: true,
                 type: Sequelize.STRING
             },
             bio: {

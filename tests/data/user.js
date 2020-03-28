@@ -78,3 +78,8 @@ export const updatedUser = {
     lastname: 'Chai',
     bio: 'Mocha is a nodejs testing library'
 };
+
+export const googleUser = {
+    access_token:
+        'ya29.a0Adw1xeW6GbPmZBM17xedFQUoo04WqOzP8ZVU3lxMdmaHVt-pIKb3mvSgVZWmnhpLq4_VA7L_tgHSUiQLeBNePJzd2YWNBThJnqz_YSt9-TDBRy8EjLTHpKibFJpc8pXfzVAZ7Zcoy6XkCbNftXMR5ILIHL0gKRX3wLE'
+};

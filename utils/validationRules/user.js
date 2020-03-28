@@ -55,3 +55,10 @@ export const resetPasswordValidators = [
         .not()
         .isEmpty()
 ];
+
+export const loginViaSocilMediaValidators = [
+    check('access_token', 'access_token is required')
+        .trim()
+        .not()
+        .isEmpty()
+];

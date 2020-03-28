@@ -219,6 +219,32 @@ class userController {
             data: { user: updateResponse[1][0] }
         });
     }
+
+    async loginViaSocialMedia(req, res) {
+        const newUser = req.user;
+        const role = await Role.findOne({ where: { title: 'Author' } });
+        newUser.roleId = role.id;
+        newUser.isActivated = true;
+        const [user] = await User.findOrCreate({
+            where: { email: newUser.email },
+            defaults: newUser
+        });
+
+        const payload = {
+            id: user.id,
+            email: user.email,
+            isActivated: user.isActivated,
+            roleId: user.roleId
+        };
+        const token = generateToken(payload);
+        delete user.dataValues.password;
+
+        return res.status(200).json({
+            status: 'success',
+            message: 'User successfully logged in',
+            data: { token, user }
+        });
+    }
 }
 
 export default userController;

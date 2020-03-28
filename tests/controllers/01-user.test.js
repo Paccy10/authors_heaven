@@ -11,7 +11,8 @@ import {
     invalidUserWithoutDigit,
     loginUser,
     loginUser2,
-    updatedUser
+    updatedUser,
+    googleUser
 } from '../data/user';
 import models from '../../models';
 import generateToken from '../../utils/generateToken';
@@ -422,6 +423,26 @@ describe('User', () => {
                     .property('message')
                     .eql('User profile successfully updated');
                 res.body.should.have.property('data');
+                done();
+            });
+    }).timeout(15000);
+
+    it('should login a user via google', done => {
+        chai.request(app)
+            .post(`${API_BASE_URL}/auth/login/google`)
+            .send(googleUser)
+            .end((error, res) => {
+                if (error) {
+                    done(error);
+                }
+                res.should.status(200);
+                res.body.should.have.property('status').eql('success');
+                res.body.should.have
+                    .property('message')
+                    .eql('User successfully logged in');
+                res.body.should.have.property('data');
+                res.body.data.should.have.property('user');
+                res.body.data.should.have.property('token');
                 done();
             });
     }).timeout(15000);
