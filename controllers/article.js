@@ -18,7 +18,7 @@ class articleController {
             title: req.body.title,
             slug,
             body: req.body.body,
-            tags: req.body.tags ? req.body.tags.split(',') : null,
+            tags: req.body.tags ? req.body.tags.toLowerCase().split(',') : null,
             image,
             authorId: req.user.id
         };
