@@ -1,7 +1,7 @@
 /* eslint-disable no-plusplus */
 import models from '../../models';
 
-const { user: User, role: Role, permission: Permission } = models;
+const { user: User, role: Role } = models;
 
 export const checkEmail = async (req, res, next) => {
     const user = await User.findOne({ where: { email: req.body.email } });

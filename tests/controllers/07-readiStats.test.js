@@ -61,7 +61,7 @@ describe('Reading Stats', () => {
 
     it('should get all user  total readings', done => {
         chai.request(app)
-            .get(`${API_BASE_URL}/auth/readings`)
+            .get(`${API_BASE_URL}/users/readings`)
             .set('Authorization', APIToken)
             .end((err, res) => {
                 if (err) {
