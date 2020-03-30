@@ -1,15 +1,18 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../../index';
+import models from '../../models';
 
 chai.use(chaiHttp);
 chai.should();
 
 const API_BASE_URL = '/api/v1';
+const { article: Article } = models;
 
 describe('Vote', () => {
     let APIToken;
     let APIToken2;
+    let article;
 
     before(async () => {
         const response = await chai
@@ -27,6 +30,8 @@ describe('Vote', () => {
 
         APIToken = `Bearer ${response.body.data.token}`;
         APIToken2 = `Bearer ${response2.body.data.token}`;
+
+        article = await Article.findByPk(2);
     });
 
     it('should like an article', done => {
@@ -141,6 +146,23 @@ describe('Vote', () => {
                 res.body.should.have.property('data');
                 res.body.data.should.have.property('vote');
                 res.body.data.vote.vote.should.equal(false);
+                done();
+            });
+    });
+
+    it('should get one article with votes', done => {
+        chai.request(app)
+            .get(`${API_BASE_URL}/articles/${article.slug}`)
+            .set('Authorization', APIToken2)
+            .end((err, res) => {
+                if (err) {
+                    done(err);
+                }
+                res.should.status(200);
+                res.body.should.have.property('status').eql('success');
+                res.body.should.have.property('data');
+                res.body.data.should.have.property('article');
+                res.body.data.article.should.have.property('votes');
                 done();
             });
     });

@@ -6,10 +6,12 @@ import Vote from '../controllers/vote';
 import Report from '../controllers/report';
 import ReadingStats from '../controllers/readingStats';
 import auth from '../middlewares/auth';
+import checkAuth from '../middlewares/checkAuth';
 import asyncHandler from '../middlewares/errors/asyncHandler';
 import { validate } from '../middlewares/validations';
 import {
-    checkArticle,
+    checkArticleByID,
+    checkArticleBySlug,
     checkArticleAuthor
 } from '../middlewares/validations/article';
 import {
@@ -43,11 +45,16 @@ router.post(
 );
 
 router.get('/', asyncHandler(article.getAll));
-router.get('/:slug', asyncHandler(article.getOne));
+router.get(
+    '/:slug',
+    checkAuth,
+    asyncHandler(checkArticleBySlug),
+    asyncHandler(article.getOne)
+);
 router.put(
     '/:articleId',
     auth,
-    asyncHandler(checkArticle),
+    asyncHandler(checkArticleByID),
     asyncHandler(checkArticleAuthor),
     upload.single('image'),
     newArticleValitors,
@@ -57,7 +64,7 @@ router.put(
 router.delete(
     '/:articleId',
     auth,
-    asyncHandler(checkArticle),
+    asyncHandler(checkArticleByID),
     asyncHandler(checkArticleAuthor),
     asyncHandler(article.delete)
 );
@@ -66,7 +73,7 @@ router.delete(
 router.post(
     '/:articleId/ratings',
     auth,
-    asyncHandler(checkArticle),
+    asyncHandler(checkArticleByID),
     newRatingValidators,
     validate,
     asyncHandler(rating.create)
@@ -74,7 +81,7 @@ router.post(
 
 router.get(
     '/:articleId/ratings',
-    asyncHandler(checkArticle),
+    asyncHandler(checkArticleByID),
     asyncHandler(rating.getAll)
 );
 
@@ -82,7 +89,7 @@ router.get(
 router.post(
     '/:articleId/comments',
     auth,
-    asyncHandler(checkArticle),
+    asyncHandler(checkArticleByID),
     newCommentValitors,
     validate,
     asyncHandler(comment.create)
@@ -92,7 +99,7 @@ router.post(
 router.post(
     '/:articleId/like',
     auth,
-    asyncHandler(checkArticle),
+    asyncHandler(checkArticleByID),
     asyncHandler(checkVote),
     asyncHandler(checkLike),
     asyncHandler(vote.like)
@@ -101,7 +108,7 @@ router.post(
 router.post(
     '/:articleId/dislike',
     auth,
-    asyncHandler(checkArticle),
+    asyncHandler(checkArticleByID),
     asyncHandler(checkVote),
     asyncHandler(checkDislike),
     asyncHandler(vote.dislike)
@@ -111,7 +118,7 @@ router.post(
 router.post(
     '/:articleId/report',
     auth,
-    asyncHandler(checkArticle),
+    asyncHandler(checkArticleByID),
     newReportArticleValidators,
     validate,
     asyncHandler(checkReportTypeExist),
@@ -122,7 +129,7 @@ router.post(
 router.post(
     '/:articleId/readings',
     auth,
-    asyncHandler(checkArticle),
+    asyncHandler(checkArticleByID),
     asyncHandler(readingStats.create)
 );
 

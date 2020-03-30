@@ -1,8 +1,29 @@
 import models from '../../models';
 
-const { article: Article } = models;
+const { article: Article, user: User } = models;
 
-export const checkArticle = async (req, res, next) => {
+export const checkArticleBySlug = async (req, res, next) => {
+    const article = await Article.findOne({
+        where: { slug: req.params.slug },
+        include: [
+            {
+                model: User,
+                as: 'author',
+                attributes: ['firstname', 'lastname', 'image']
+            }
+        ]
+    });
+    if (!article) {
+        return res.status(404).json({
+            status: 'error',
+            errors: [{ msg: 'Article not found' }]
+        });
+    }
+    req.article = article;
+    next();
+};
+
+export const checkArticleByID = async (req, res, next) => {
     const article = await Article.findByPk(req.params.articleId);
     if (!article) {
         return res.status(404).json({
