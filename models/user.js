@@ -12,7 +12,8 @@ const userModel = (sequelize, DataTypes) => {
             roleId: {
                 type: DataTypes.INTEGER,
                 references: { model: 'role', key: 'id' }
-            }
+            },
+            allowNotifications: { type: DataTypes.JSON }
         },
         {}
     );

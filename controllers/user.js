@@ -5,14 +5,22 @@ import { uploader, destroyer } from '../utils/imageUpload/cloudinary';
 
 dotenv.config();
 
-const { user: User } = models;
+const { user: User, role: Role } = models;
 
 class userController {
     async getAll(req, res) {
         const parameters = {
             order: [['firstname', 'ASC']],
-            attributes: ['firstname', 'lastname', 'email', 'bio', 'image'],
-            where: { isActivated: true }
+            attributes: [
+                'firstname',
+                'lastname',
+                'email',
+                'bio',
+                'image',
+                'allowNotifications'
+            ],
+            where: { isActivated: true },
+            include: [{ model: Role, as: 'role', attributes: ['title'] }]
         };
         const { metaData, data } = await paginate(req, User, parameters);
         return res.status(200).json({

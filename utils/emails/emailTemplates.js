@@ -29,3 +29,15 @@ export const resetPasswordEmail = (token, user) => {
     >Change Your Password</a>
 </div>`;
 };
+
+export const notification = (message, articleSlug) => {
+    return `<div style="background-color:#f1f1f1;margin:20px;padding:20px;font-size:15px;width:40%;margin:auto;">
+<p>
+  ${message}
+</p>
+<a
+  style="display:inline-block;text-decoration:none;margin:10px 0;background-color:#4CAF50;padding:10px;color:#fff"
+  href="${API_URL}/articles/${articleSlug}"
+  >View Article</a>
+</div>`;
+};

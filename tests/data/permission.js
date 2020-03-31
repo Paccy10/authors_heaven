@@ -6,7 +6,11 @@ export const newUser = {
     email: 'test.superuser@app.com',
     password: bcrypt.hashSync('Password12345', 10),
     isActivated: true,
-    roleId: 1
+    roleId: 1,
+    allowNotifications: {
+        inApp: true,
+        email: true
+    }
 };
 
 export const newPermission = {

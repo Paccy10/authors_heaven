@@ -3,6 +3,7 @@ import { uploader, destroyer } from '../utils/imageUpload/cloudinary';
 import generateSlug from '../utils/generateSlug';
 import paginate from '../utils/paginationHandler';
 import generateArticleData from '../utils/generateArticleData';
+import { sendToFollowers } from '../utils/notifications/send';
 
 const { article: Article, user: User } = models;
 
@@ -22,7 +23,9 @@ class articleController {
             image,
             authorId: req.user.id
         };
+        const user = await User.findByPk(req.user.id);
         const article = await Article.create(newArticle);
+        await sendToFollowers(article, user);
         res.status(201).json({
             status: 'success',
             message: 'Article successfully created',

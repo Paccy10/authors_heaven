@@ -18,7 +18,7 @@ describe('Vote', () => {
         const response = await chai
             .request(app)
             .post(`${API_BASE_URL}/auth/login`)
-            .send({ email: 'test.user@app.com', password: 'Password12345' });
+            .send({ email: 'test.user3@app.com', password: 'Password12345' });
 
         const response2 = await chai
             .request(app)

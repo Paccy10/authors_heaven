@@ -6,6 +6,7 @@ import reportRoutes from './report';
 import roleRoutes from './role';
 import permissionRoutes from './permission';
 import searchRoutes from './search';
+import notificationRoutes from './notification';
 
 const app = express();
 const API_BASE_URL = '/api/v1';
@@ -17,5 +18,6 @@ app.use(`${API_BASE_URL}/report`, reportRoutes);
 app.use(`${API_BASE_URL}/roles`, roleRoutes);
 app.use(`${API_BASE_URL}/permissions`, permissionRoutes);
 app.use(`${API_BASE_URL}/search`, searchRoutes);
+app.use(`${API_BASE_URL}/notifications`, notificationRoutes);
 
 export default app;

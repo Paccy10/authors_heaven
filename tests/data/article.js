@@ -6,7 +6,11 @@ export const newUser = {
     email: 'test.articleuser@app.com',
     password: bcrypt.hashSync('Password12345', 10),
     isActivated: true,
-    roleId: 2
+    roleId: 2,
+    allowNotifications: {
+        inApp: true,
+        email: true
+    }
 };
 
 export const newArticle = {
