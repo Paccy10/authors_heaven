@@ -120,4 +120,20 @@ describe('User', () => {
                 done();
             });
     }).timeout(15000);
+
+    it('should get all user articles', done => {
+        chai.request(app)
+            .get(`${API_BASE_URL}/users/articles`)
+            .set('Authorization', adminToken)
+            .end((err, res) => {
+                if (err) {
+                    done(err);
+                }
+                res.should.status(200);
+                res.body.should.have.property('status').eql('success');
+                res.body.should.have.property('data');
+                res.body.data.should.have.property('articles');
+                done();
+            });
+    });
 });

@@ -5,6 +5,7 @@ import Comment from '../controllers/comment';
 import Vote from '../controllers/vote';
 import Report from '../controllers/report';
 import ReadingStats from '../controllers/readingStats';
+import Bookmark from '../controllers/bookmark';
 import auth from '../middlewares/auth';
 import checkAuth from '../middlewares/checkAuth';
 import asyncHandler from '../middlewares/errors/asyncHandler';
@@ -20,6 +21,7 @@ import {
     checkDislike
 } from '../middlewares/validations/vote';
 import { checkReportTypeExist } from '../middlewares/validations/report';
+import { checkBookmark } from '../middlewares/validations/bookmark';
 import { newArticleValitors } from '../utils/validationRules/article';
 import { newRatingValidators } from '../utils/validationRules/rating';
 import { newCommentValitors } from '../utils/validationRules/comment';
@@ -33,6 +35,7 @@ const comment = new Comment();
 const vote = new Vote();
 const report = new Report();
 const readingStats = new ReadingStats();
+const bookmark = new Bookmark();
 
 // Articles
 router.post(
@@ -131,6 +134,22 @@ router.post(
     auth,
     asyncHandler(checkArticleByID),
     asyncHandler(readingStats.create)
+);
+
+// Boormarks
+router.post(
+    '/:articleId/bookmark',
+    auth,
+    asyncHandler(checkArticleByID),
+    asyncHandler(checkBookmark),
+    asyncHandler(bookmark.bookmark)
+);
+
+router.post(
+    '/:articleId/unbookmark',
+    auth,
+    asyncHandler(checkArticleByID),
+    asyncHandler(bookmark.unbookmark)
 );
 
 export default router;

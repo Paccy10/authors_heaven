@@ -5,7 +5,7 @@ import { uploader, destroyer } from '../utils/imageUpload/cloudinary';
 
 dotenv.config();
 
-const { user: User, role: Role } = models;
+const { user: User, role: Role, article: Article } = models;
 
 class userController {
     async getAll(req, res) {
@@ -83,6 +83,17 @@ class userController {
             status: 'success',
             message: 'User profile successfully updated',
             data: { user: updateResponse[1][0] }
+        });
+    }
+
+    async getArticles(req, res) {
+        const articles = await Article.findAll({
+            where: { authorId: req.user.id }
+        });
+        return res.status(200).json({
+            status: 'success',
+            message: 'User articles successfully fetched',
+            data: { articles }
         });
     }
 }

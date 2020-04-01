@@ -2,6 +2,7 @@ import express from 'express';
 import User from '../controllers/user';
 import ReadingStats from '../controllers/readingStats';
 import Follower from '../controllers/follower';
+import Bookmark from '../controllers/bookmark';
 import { signupValidators } from '../utils/validationRules/user';
 import asyncHandler from '../middlewares/errors/asyncHandler';
 import { validate } from '../middlewares/validations';
@@ -16,6 +17,7 @@ const router = express.Router();
 const user = new User();
 const readingStats = new ReadingStats();
 const follower = new Follower();
+const bookmark = new Bookmark();
 
 router.get('/', auth, asyncHandler(user.getAll));
 
@@ -25,6 +27,12 @@ router.get('/followees', auth, asyncHandler(follower.getFollowees));
 
 // Reading stats
 router.get('/readings', auth, asyncHandler(readingStats.getUserReadingStats));
+
+// articles
+router.get('/articles', auth, asyncHandler(user.getArticles));
+
+// Bookmarks
+router.get('/bookmarks', auth, asyncHandler(bookmark.getAll));
 
 // Profile
 router.get('/me', auth, asyncHandler(user.getCurrent));
