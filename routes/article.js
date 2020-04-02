@@ -22,9 +22,10 @@ import {
 } from '../middlewares/validations/vote';
 import { checkReportTypeExist } from '../middlewares/validations/report';
 import { checkBookmark } from '../middlewares/validations/bookmark';
+import { checkComment } from '../middlewares/validations/comment';
 import { newArticleValitors } from '../utils/validationRules/article';
 import { newRatingValidators } from '../utils/validationRules/rating';
-import { newCommentValitors } from '../utils/validationRules/comment';
+import { newCommentValidators } from '../utils/validationRules/comment';
 import { newReportArticleValidators } from '../utils/validationRules/report';
 import upload from '../utils/imageUpload/multer';
 
@@ -93,9 +94,33 @@ router.post(
     '/:articleId/comments',
     auth,
     asyncHandler(checkArticleByID),
-    newCommentValitors,
+    newCommentValidators,
     validate,
     asyncHandler(comment.create)
+);
+
+router.get(
+    '/:articleId/comments',
+    asyncHandler(checkArticleByID),
+    asyncHandler(comment.getAll)
+);
+
+router.patch(
+    '/:articleId/comments/:commentId',
+    auth,
+    asyncHandler(checkArticleByID),
+    asyncHandler(checkComment),
+    newCommentValidators,
+    validate,
+    asyncHandler(comment.update)
+);
+
+router.delete(
+    '/:articleId/comments/:commentId',
+    auth,
+    asyncHandler(checkArticleByID),
+    asyncHandler(checkComment),
+    asyncHandler(comment.delete)
 );
 
 // Votes

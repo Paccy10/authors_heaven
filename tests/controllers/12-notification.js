@@ -152,7 +152,7 @@ describe('Notification', () => {
 
     it('should get one user notification', done => {
         chai.request(app)
-            .get(`${API_BASE_URL}/notifications/5`)
+            .get(`${API_BASE_URL}/notifications/1`)
             .set('Authorization', APIToken)
             .end((err, res) => {
                 if (err) {
