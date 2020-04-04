@@ -67,7 +67,7 @@ describe('Comment', () => {
 
     it('should update a comment', done => {
         chai.request(app)
-            .patch(`${API_BASE_URL}/articles/2/comments/1`)
+            .patch(`${API_BASE_URL}/comments/1`)
             .set('Authorization', APIToken)
             .send({ body: 'bad article' })
             .end((err, res) => {
@@ -88,7 +88,7 @@ describe('Comment', () => {
 
     it('should not update a comment if the comment does not exist', done => {
         chai.request(app)
-            .patch(`${API_BASE_URL}/articles/2/comments/10`)
+            .patch(`${API_BASE_URL}/comments/10`)
             .set('Authorization', APIToken)
             .end((err, res) => {
                 if (err) {
@@ -104,7 +104,7 @@ describe('Comment', () => {
 
     it('should not update a comment if you are not the owner', done => {
         chai.request(app)
-            .patch(`${API_BASE_URL}/articles/2/comments/1`)
+            .patch(`${API_BASE_URL}/comments/1`)
             .set('Authorization', APIToken2)
             .end((err, res) => {
                 if (err) {
@@ -120,9 +120,142 @@ describe('Comment', () => {
             });
     });
 
+    it('should like a comment', done => {
+        chai.request(app)
+            .post(`${API_BASE_URL}/comments/1/like`)
+            .set('Authorization', APIToken)
+            .end((err, res) => {
+                if (err) {
+                    done(err);
+                }
+                res.should.status(201);
+                res.body.should.have.property('status').eql('success');
+                res.body.should.have
+                    .property('message')
+                    .eql('Comment successfully liked');
+                res.body.should.have.property('data');
+                res.body.data.should.have.property('vote');
+                res.body.data.vote.vote.should.equal(true);
+                done();
+            });
+    });
+
+    it('should not like a comment if it is already liked', done => {
+        chai.request(app)
+            .post(`${API_BASE_URL}/comments/1/like`)
+            .set('Authorization', APIToken)
+            .end((err, res) => {
+                if (err) {
+                    done(err);
+                }
+                res.should.status(400);
+                res.body.should.have.property('status').eql('error');
+                res.body.should.have.property('errors');
+                res.body.errors[0].msg.should.equal(
+                    'Sorry, you have already liked this comment'
+                );
+                done();
+            });
+    });
+
+    it('should dislike a comment', done => {
+        chai.request(app)
+            .post(`${API_BASE_URL}/comments/1/dislike`)
+            .set('Authorization', APIToken)
+            .end((err, res) => {
+                if (err) {
+                    done(err);
+                }
+                res.should.status(200);
+                res.body.should.have.property('status').eql('success');
+                res.body.should.have
+                    .property('message')
+                    .eql('Comment successfully disliked');
+                res.body.should.have.property('data');
+                res.body.data.should.have.property('vote');
+                res.body.data.vote.vote.should.equal(false);
+                done();
+            });
+    });
+
+    it('should not dislike a comment if it is already disliked', done => {
+        chai.request(app)
+            .post(`${API_BASE_URL}/comments/1/dislike`)
+            .set('Authorization', APIToken)
+            .end((err, res) => {
+                if (err) {
+                    done(err);
+                }
+                res.should.status(400);
+                res.body.should.have.property('status').eql('error');
+                res.body.should.have.property('errors');
+                res.body.errors[0].msg.should.equal(
+                    'Sorry, you have already disliked this comment'
+                );
+                done();
+            });
+    });
+
+    it('should like a disliked comment', done => {
+        chai.request(app)
+            .post(`${API_BASE_URL}/comments/1/like`)
+            .set('Authorization', APIToken)
+            .end((err, res) => {
+                if (err) {
+                    done(err);
+                }
+                res.should.status(200);
+                res.body.should.have.property('status').eql('success');
+                res.body.should.have
+                    .property('message')
+                    .eql('Comment successfully liked');
+                res.body.should.have.property('data');
+                res.body.data.should.have.property('vote');
+                res.body.data.vote.vote.should.equal(true);
+                done();
+            });
+    });
+
+    it('should dislike a comment', done => {
+        chai.request(app)
+            .post(`${API_BASE_URL}/comments/1/dislike`)
+            .set('Authorization', APIToken2)
+            .end((err, res) => {
+                if (err) {
+                    done(err);
+                }
+                res.should.status(201);
+                res.body.should.have.property('status').eql('success');
+                res.body.should.have
+                    .property('message')
+                    .eql('Comment successfully disliked');
+                res.body.should.have.property('data');
+                res.body.data.should.have.property('vote');
+                res.body.data.vote.vote.should.equal(false);
+                done();
+            });
+    });
+
+    it('should get one comment', done => {
+        chai.request(app)
+            .get(`${API_BASE_URL}/comments/1`)
+            .set('Authorization', APIToken)
+            .end((err, res) => {
+                if (err) {
+                    done(err);
+                }
+                res.should.status(200);
+                res.body.should.have.property('status').eql('success');
+                res.body.should.have.property('data');
+                res.body.data.should.have.property('comment');
+                res.body.data.comment.should.have.property('votes');
+                done();
+            });
+    });
+
     it('should delete a comment', done => {
         chai.request(app)
-            .delete(`${API_BASE_URL}/articles/2/comments/1`)
+            .delete(`${API_BASE_URL}/comments/1`)
             .set('Authorization', APIToken)
             .end((err, res) => {
                 if (err) {

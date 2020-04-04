@@ -1,7 +1,13 @@
 import models from '../models';
 import { sendToFavorite } from '../utils/notifications/send';
+import generateCommentData from '../utils/generateCommentData';
 
-const { comment: Comment, user: User, article: Article } = models;
+const {
+    comment: Comment,
+    user: User,
+    article: Article,
+    commentVote: CommentVote
+} = models;
 
 class CommentController {
     async create(req, res) {
@@ -43,6 +49,17 @@ class CommentController {
         });
     }
 
+    async getOne(req, res) {
+        const { comment } = req;
+
+        const newComment = await generateCommentData(comment, req.user);
+        return res.status(200).json({
+            status: 'success',
+            message: 'Comment successfully fetched',
+            data: { comment: newComment }
+        });
+    }
+
     async update(req, res) {
         const updateResponse = await Comment.update(
             { body: req.body.body },
@@ -63,6 +80,56 @@ class CommentController {
         return res.status(200).json({
             status: 'success',
             message: 'Comment successfully deleted'
+        });
+    }
+
+    async like(req, res) {
+        const newVote = {
+            userId: req.user.id,
+            commentId: req.params.commentId,
+            vote: true
+        };
+        if (req.commentVote) {
+            const updateResponse = await CommentVote.update(
+                { vote: true },
+                { where: { id: req.commentVote.id }, returning: true }
+            );
+            return res.status(200).json({
+                status: 'success',
+                message: 'Comment successfully liked',
+                data: { vote: updateResponse[1][0] }
+            });
+        }
+        const vote = await CommentVote.create(newVote);
+        return res.status(201).json({
+            status: 'success',
+            message: 'Comment successfully liked',
+            data: { vote }
+        });
+    }
+
+    async dislike(req, res) {
+        const newVote = {
+            userId: req.user.id,
+            commentId: req.params.commentId,
+            vote: false
+        };
+        if (req.commentVote) {
+            const updateResponse = await CommentVote.update(
+                { vote: false },
+                { where: { id: req.commentVote.id }, returning: true }
+            );
+            return res.status(200).json({
+                status: 'success',
+                message: 'Comment successfully disliked',
+                data: { vote: updateResponse[1][0] }
+            });
+        }
+        const vote = await CommentVote.create(newVote);
+        return res.status(201).json({
+            status: 'success',
+            message: 'Comment successfully disliked',
+            data: { vote }
         });
     }
 }

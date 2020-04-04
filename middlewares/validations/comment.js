@@ -10,8 +10,12 @@ export const checkComment = async (req, res, next) => {
             errors: [{ msg: 'Comment not found' }]
         });
     }
+    req.comment = comment;
+    next();
+};
 
-    if (comment.userId !== req.user.id) {
+export const checkCommentAuthor = (req, res, next) => {
+    if (req.comment.userId !== req.user.id) {
         return res.status(403).json({
             status: 'error',
             errors: [
@@ -22,6 +26,5 @@ export const checkComment = async (req, res, next) => {
             ]
         });
     }
-    req.comment = comment;
     next();
 };

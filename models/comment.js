@@ -24,6 +24,10 @@ const commentModel = (sequelize, DataTypes) => {
             foreignKey: 'articleId',
             onDelete: 'CASCADE'
         });
+        Comment.hasMany(models.commentVote, {
+            foreignKey: 'commentId',
+            as: 'votes'
+        });
     };
     return Comment;
 };
