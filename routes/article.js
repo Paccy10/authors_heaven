@@ -6,6 +6,7 @@ import Vote from '../controllers/vote';
 import Report from '../controllers/report';
 import ReadingStats from '../controllers/readingStats';
 import Bookmark from '../controllers/bookmark';
+import Highlight from '../controllers/highlight';
 import auth from '../middlewares/auth';
 import checkAuth from '../middlewares/checkAuth';
 import asyncHandler from '../middlewares/errors/asyncHandler';
@@ -22,10 +23,12 @@ import {
 } from '../middlewares/validations/vote';
 import { checkReportTypeExist } from '../middlewares/validations/report';
 import { checkBookmark } from '../middlewares/validations/bookmark';
+import { checkIndeces } from '../middlewares/validations/highlight';
 import { newArticleValitors } from '../utils/validationRules/article';
 import { newRatingValidators } from '../utils/validationRules/rating';
 import { newCommentValidators } from '../utils/validationRules/comment';
 import { newReportArticleValidators } from '../utils/validationRules/report';
+import { newHighlightValidators } from '../utils/validationRules/highlight';
 import upload from '../utils/imageUpload/multer';
 
 const router = express.Router();
@@ -36,6 +39,7 @@ const vote = new Vote();
 const report = new Report();
 const readingStats = new ReadingStats();
 const bookmark = new Bookmark();
+const highlight = new Highlight();
 
 // Articles
 router.post(
@@ -156,6 +160,24 @@ router.post(
     auth,
     asyncHandler(checkArticleByID),
     asyncHandler(bookmark.unbookmark)
+);
+
+// Highlights
+router.post(
+    '/:articleId/highlights',
+    auth,
+    asyncHandler(checkArticleByID),
+    newHighlightValidators,
+    validate,
+    asyncHandler(checkIndeces),
+    asyncHandler(highlight.create)
+);
+
+router.get(
+    '/:articleId/highlights',
+    auth,
+    asyncHandler(checkArticleByID),
+    asyncHandler(highlight.getAll)
 );
 
 export default router;
