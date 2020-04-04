@@ -5,6 +5,7 @@ import routes from './routes';
 dotenv.config();
 
 const app = express();
+const port = process.env.PORT || 5000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -17,8 +18,8 @@ app.use((req, res) => {
     });
 });
 
-app.listen(5000, () => {
-    console.log('Server started successfully on 5000');
+app.listen(port, () => {
+    console.log(`Server started successfully on ${port}`);
 });
 
 export default app;

@@ -1,4 +1,8 @@
-const API_URL = 'http://127.0.0.1:5000/api/v1';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const { API_URL } = process.env;
 
 export const comfirmationEmail = (token, user) => {
     return `<div style="background-color:#f1f1f1;margin:20px;padding:20px;font-size:15px;width:40%;margin:auto;">
