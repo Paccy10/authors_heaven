@@ -89,10 +89,10 @@ export const updatedUser = {
 
 export const googleUser = {
     access_token:
-        'ya29.a0Ae4lvC3au4V6uhc00Vi27OMNV2M0599hlGm0PMp_SZ-zBjDnmV82wsMw6OOiZtGBr9ti2aIPtwsLMEVQkpKWqWI7CWk2MxPYirlbl42mjF2qkQcv-0LBXkdFfyH6NXc-ZaCTfrkWxRHoG3abPWRjXjOl0awVAYhVzp3h'
+        'ya29.a0Ae4lvC3yANVOMOYt9wul-TDaeIPOoF9G6_Xx-2oc_ygZk94NskxS7-UNEkEQtmXFOBh9vCDzQc6_Y6C3D3HTOGXYOe78nBXz2cWx5HMHOPL-gHrxVtQpeTTp_82S7zc3G7FC-EWRXrNEab_xVEL3PHWQZgAAnY6tTU0'
 };
 
 export const facebookUser = {
     access_token:
-        'EAADjRsgzs0EBAPje5LrZB2iijTasWTCOQAaA8mHtkSBn0PlJV2u3rIruszXZBCySWRnCxtI4aA7O2QkJyNDI9omhq8L28kg90ScXMxis1p52gsPBOfqlkW4dfiJJeiCQZBZAYTA8BHvCrMjCqBA6bjBHSZCMlXUIyfHKY0hMQMGAEZAcPf5LZBg0cd8is3RdFj3ZCUCtWIOsQ7xMtn3vm2OvN0r4X8UA6Ad6o7IzHErHuwZDZD'
+        'EAADjRsgzs0EBAGDU7qjZCAGM9mOIJ4cUdVgTXbq0KPcJkUuuyiZCgjrxY19OyGLV5JdfC1418ArSYnQwQ75GDdiXcdmBtVfCyliIm5ec5aMcrjA9rpCaTZBLtPfLDxyC2F4SaZAisZCW0slZCNh6z5LtTzApLvCVjGGEZBzExXrHFSF5tpEycjcQrsZAw3ZAvQh4ZD'
 };

@@ -294,7 +294,7 @@ describe('Article', () => {
                 res.body.should.have.property('status').eql('error');
                 res.body.should.have.property('errors');
                 res.body.errors[0].msg.should.equal(
-                    'invalid input syntax for integer: "hg"'
+                    'invalid input syntax for type integer: "hg"'
                 );
                 done();
             });
