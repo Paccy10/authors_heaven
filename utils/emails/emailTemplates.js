@@ -23,7 +23,10 @@ export const comfirmationEmail = (token, user) => {
 };
 
 export const resetPasswordEmail = (token, user) => {
-    return `<div style="background-color:#f1f1f1;margin:20px;padding:20px;font-size:15px;width:40%;margin:auto;">
+    return `<div style="background-color:#f1f1f1;margin:20px;padding:20px;font-size:15px;width:80%;margin:auto;">
+  <div style="width:150px;margin:auto;">
+    <img src="https://res.cloudinary.com/dhsoe7agl/image/upload/v1588337891/authors%20heaven/logo_qesjrt.png" width="100%" />
+  </div>
   <p>
     Hello ${user.firstname},<br /><br />
     A password reset for your account was requested.Please click the button below to change your password.
@@ -31,7 +34,7 @@ export const resetPasswordEmail = (token, user) => {
     the request for a password reset.
   </p>
   <a
-    style="display:inline-block;text-decoration:none;margin:10px 0;background-color:#4CAF50;padding:10px;color:#fff"
+    style="display:inline-block;text-decoration:none;margin:10px 0;background-color:#e03997;padding:10px;color:#fff"
     href="${APP_URL}/auth/reset-password/${token}"
     >Change Your Password</a>
 </div>`;
