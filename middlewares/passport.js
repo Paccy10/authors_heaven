@@ -1,14 +1,15 @@
 import passport from 'passport';
-import GooglePlusTokenStrategy from 'passport-google-plus-token';
+import PassportGoogleToken from 'passport-google-token';
 import FacebookTokenStrategy from 'passport-facebook-token';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
 // Google oauth strategy
+const GoogleTokenStrategy = PassportGoogleToken.Strategy;
 passport.use(
     'google',
-    new GooglePlusTokenStrategy(
+    new GoogleTokenStrategy(
         {
             clientID: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET
