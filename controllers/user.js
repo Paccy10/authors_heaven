@@ -50,9 +50,10 @@ class userController {
 
     async getCurrent(req, res) {
         const user = await User.findOne({
-            where: { email: req.user.email },
-            attributes: ['firstname', 'lastname', 'email', 'bio', 'image']
+            where: { email: req.user.email }
         });
+
+        delete user.dataValues.password;
 
         return res.status(200).json({
             status: 'success',
