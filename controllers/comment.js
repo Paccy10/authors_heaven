@@ -1,3 +1,5 @@
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-restricted-syntax */
 import models from '../models';
 import { sendToFavorite } from '../utils/notifications/send';
 import generateCommentData from '../utils/generateCommentData';
@@ -21,19 +23,7 @@ class CommentController {
         const notificationBody = `${user.firstname} ${user.lastname} has commented on an article you have reacted on.`;
 
         const comment = await Comment.create(newComment);
-        await sendToFavorite(article, user, notificationBody);
-        return res.status(201).json({
-            status: 'success',
-            message: 'Comment successfully created',
-            data: { comment }
-        });
-    }
-
-    async getAll(req, res) {
-        const comments = await Comment.findAll({
-            where: { articleId: req.params.articleId },
-            order: [['id', 'DESC']],
-            attributes: ['id', 'createdAt', 'updatedAt'],
+        const cmt = await Comment.findByPk(comment.id, {
             include: [
                 {
                     model: User,
@@ -42,10 +32,36 @@ class CommentController {
                 }
             ]
         });
+        const commentWithData = await generateCommentData(cmt, req.user);
+        await sendToFavorite(article, user, notificationBody);
+        return res.status(201).json({
+            status: 'success',
+            message: 'Comment successfully created',
+            data: { comment: commentWithData }
+        });
+    }
+
+    async getAll(req, res) {
+        const comments = await Comment.findAll({
+            where: { articleId: req.params.articleId },
+            order: [['id', 'DESC']],
+            include: [
+                {
+                    model: User,
+                    as: 'user',
+                    attributes: ['firstname', 'lastname', 'image']
+                }
+            ]
+        });
+        const newComments = [];
+        for (const comment of comments) {
+            const newComment = await generateCommentData(comment, req.user);
+            newComments.push(newComment);
+        }
         return res.status(200).json({
             status: 'success',
             message: 'Comments successfully fetched',
-            data: { comments }
+            data: { comments: newComments }
         });
     }
 

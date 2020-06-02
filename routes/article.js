@@ -104,6 +104,7 @@ router.post(
 
 router.get(
     '/:articleId/comments',
+    checkAuth,
     asyncHandler(checkArticleByID),
     asyncHandler(comment.getAll)
 );
