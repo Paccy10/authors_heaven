@@ -13,7 +13,7 @@ const mailOptions = {
 };
 
 export const sendToFavorite = async (article, notifier, body) => {
-    const inAppNotifications = [];
+    let inAppNotifications = [];
     const emails = new Set();
     const receivers = await getFavoritedUsers(article.id);
     if (receivers.length > 0) {
@@ -28,6 +28,12 @@ export const sendToFavorite = async (article, notifier, body) => {
             }
         });
         if (inAppNotifications.length > 0) {
+            inAppNotifications = Object.values(
+                inAppNotifications.reduce(
+                    (acc, cur) => Object.assign(acc, { [cur.receiverId]: cur }),
+                    {}
+                )
+            );
             await Notification.bulkCreate(inAppNotifications, {
                 returning: true
             });
@@ -41,7 +47,7 @@ export const sendToFavorite = async (article, notifier, body) => {
 };
 
 export const sendToFollowers = async (article, notifier) => {
-    const inAppNotifications = [];
+    let inAppNotifications = [];
     const emails = new Set();
     const receivers = await getFollowers(notifier.id);
     const body = `${notifier.firstname} ${notifier.lastname} has created a new article.`;
@@ -57,6 +63,12 @@ export const sendToFollowers = async (article, notifier) => {
             }
         });
         if (inAppNotifications.length > 0) {
+            inAppNotifications = Object.values(
+                inAppNotifications.reduce(
+                    (acc, cur) => Object.assign(acc, { [cur.receiverId]: cur }),
+                    {}
+                )
+            );
             await Notification.bulkCreate(inAppNotifications, {
                 returning: true
             });

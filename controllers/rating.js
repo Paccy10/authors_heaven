@@ -34,6 +34,7 @@ class RatingController {
 
     async getAll(req, res) {
         const parameters = {
+            where: { articleId: req.params.articleId },
             order: [['id', 'DESC']],
             include: [
                 {
