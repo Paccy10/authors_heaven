@@ -10,5 +10,9 @@ export const newHighlightValidators = [
     check('comment', 'comment is required')
         .trim()
         .not()
+        .isEmpty(),
+    check('text', 'text is required')
+        .trim()
+        .not()
         .isEmpty()
 ];

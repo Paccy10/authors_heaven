@@ -4,8 +4,7 @@ const { highlight: Highlight } = models;
 
 class HighlightController {
     async create(req, res) {
-        const { indexStart, indexEnd, comment } = req.body;
-        const text = req.article.body.substring(indexStart, indexEnd);
+        const { indexStart, indexEnd, comment, text } = req.body;
         const [highlight, created] = await Highlight.findOrCreate({
             where: {
                 articleId: req.params.articleId,
